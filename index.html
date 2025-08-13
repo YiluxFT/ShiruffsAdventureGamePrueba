@@ -1,0 +1,1057 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Shiruffs Adventure - Menú Principal y Tienda</title>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #1a1a1a; /* Un fondo oscuro limpio */
+            display: flex;
+            flex-direction: column; /* Apila los elementos verticalmente */
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            overflow: hidden; /* Evita barras de desplazamiento */
+            user-select: none; /* Previene la selección de texto */
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            position: relative; /* Necesario para los elementos posicionados absolutamente */
+            font-family: 'Press Start 2P', cursive; /* Fuente pixel art por defecto */
+            color: #eceff1;
+            text-shadow: 1px 1px 0px rgba(0, 0, 0, 0.7);
+        }
+
+        /* Estilos para ocultar/mostrar las secciones */
+        .hidden {
+            display: none !important;
+        }
+
+        /* Título del juego */
+        .game-title {
+            position: absolute;
+            top: 30px; /* Ajustado para mover el título más arriba y centrarlo mejor */
+            left: 50%; /* Centra horizontalmente el elemento */
+            transform: translateX(-50%); /* Ajusta la posición para centrado perfecto */
+            white-space: nowrap; /* Evita que el texto se rompa en varias líneas */
+            font-family: 'Press Start 2P', cursive;
+            font-size: 2.5em; /* Tamaño grande para el título */
+            color: #FF8C00; /* Color naranja vibrante "a lo Dan the Man" */
+            /* Sombra más pronunciada y pixelada */
+            text-shadow: 6px 6px 0px #8B4513, /* Sombra principal más oscura y nítida */
+                         10px 10px 0px rgba(0, 0, 0, 0.5); /* Sombra de profundidad más suave */
+            z-index: 15; /* Asegura que esté por encima de todo */
+        }
+
+        /* Contenedor para los personajes principales */
+        .character-row-container {
+            position: absolute;
+            top: 100px; /* Ajusta la altura de los personajes desde arriba, movido más abajo para el título */
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 15px; /* Espacio entre los personajes, ajustado para el nuevo diseño */
+            align-items: flex-end; /* Alinea los personajes por la base */
+            justify-content: center;
+            z-index: 8; /* Asegura que estén detrás de los botones de la esquina si se superponen */
+        }
+
+        .character-icon {
+            height: auto; /* Altura automática para mantener proporción */
+            object-fit: contain; /* Asegura que la imagen se ajuste */
+            image-rendering: pixelated; /* Mantiene el estilo pixel art */
+            pointer-events: none; /* No son interactivos, son decorativos */
+        }
+
+        .main-character-icon {
+            width: 350px; /* Tamaño muy grande para el personaje central */
+        }
+
+        .skeleton-icon {
+            width: 200px; /* Tamaño para los esqueletos, más pequeños que el central */
+        }
+
+        /* Contenedor principal para centrar el grupo de botones */
+        .game-menu {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 30px; /* Espacio entre el botón JUGAR y el grupo de abajo */
+            padding: 20px;
+            z-index: 10; /* AHORA EL MENÚ DE JUEGO ESTÁ ENCIMA DE LOS PERSONAJES */
+            position: relative; /* Necesario para que z-index funcione correctamente */
+            margin-top: 170px; /* MOVido aún más abajo */
+        }
+
+        /* Estilos generales para el botón estilo pixel art (JUGAR, Historia, Batalla, Arena) */
+        .pixel-button {
+            appearance: none; /* Restablece estilos por defecto del navegador */
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            background: none;
+            border: none;
+            padding: 15px 30px; /* Espaciado interno estándar */
+            cursor: pointer;
+            text-align: center;
+            box-sizing: border-box;
+
+            font-family: 'Press Start 2P', cursive;
+            font-size: 1.2em; /* Fuente ligeramente más grande */
+            color: #eceff1;
+            text-shadow: 2px 2px 0px rgba(0, 0, 0, 0.7);
+            text-transform: uppercase;
+
+            background-color: #3f3f3f;
+            border: 2px solid #8B4513;
+            border-radius: 6px; /* Aseguramos un valor sensato */
+            box-shadow:
+                inset  0px 2px 0px 0px rgba(255, 255, 255, 0.15),
+                0px 4px 0px 0px #5A2D0D,
+                0px 6px 0px 0px #3F1D08;
+            transition: all 0.1s ease-out;
+            user-select: none;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            min-width: 200px; /* Ancho mínimo para consistencia */
+        }
+
+        .pixel-button:hover {
+            transform: translateY(-2px);
+            box-shadow:
+                inset 0px 2px 0px 0px rgba(255, 255, 255, 0.25),
+                0px 6px 0px 0px #5A2D0D,
+                0px 8px 0px 0px #3F1D08;
+        }
+
+        .pixel-button:active {
+            transform: translateY(2px);
+            box-shadow:
+                inset 0px 1px 0px 0px rgba(255, 255, 255, 0.1),
+                0px 2px 0px 0px #5A2D0D,
+                0px 3px 0px 0px #3F1D08;
+        }
+
+        .pixel-button:focus {
+            outline: none;
+        }
+
+        /* Estilos para el botón "JUGAR" (más grande) */
+        #playButton {
+            padding: 20px 40px; /* Más padding para hacerlo más grande */
+            font-size: 1.5em; /* Fuente un poco más grande */
+            min-width: 250px; /* Asegura un tamaño consistente */
+        }
+
+        /* Contenedor para los botones "Historia", "Batalla", "Arena" (en fila) */
+        .primary-buttons-group {
+            display: flex;
+            flex-direction: row; /* Coloca los botones uno al lado del otro */
+            justify-content: center; /* Centra los botones dentro de su grupo */
+            align-items: center;
+            gap: 20px; /* Espacio entre los botones */
+            width: 100%; /* Ocupa el ancho completo de su padre (.game-menu) */
+            max-width: 650px; /* Ancho máximo para evitar que sean demasiado grandes */
+        }
+
+        /* Asegura que los botones del grupo ocupen espacio equitativo */
+        .primary-buttons-group .pixel-button {
+            flex-grow: 1;
+            max-width: 200px; /* Ancho máximo individual para estos botones */
+        }
+
+        /* Estilos para el botón de texto "TIENDA" */
+        #tiendaButton {
+            position: absolute; /* Posicionamiento absoluto respecto al body */
+            background: none; /* Sin fondo */
+            border: none; /* Sin borde */
+            cursor: pointer;
+            font-family: 'Press Start 2P', cursive; /* Fuente Pixel Art para Tienda */
+            font-size: 1.0em; /* Fuente más grande para Tienda */
+            color: #eceff1;
+            text-shadow: 1px 1px 0px rgba(0, 0, 0, 0.7);
+            padding: 5px 10px;
+            white-space: nowrap;
+            transition: color 0.1s ease-out, transform 0.1s ease-out;
+            z-index: 10;
+            top: 250px; /* Posición del texto TIENDA */
+            left: 20px; /* Posición horizontal ajustada */
+            text-align: left;
+        }
+
+        #tiendaButton:hover {
+            color: #FFD700;
+        }
+
+        #tiendaButton:active {
+            transform: translateY(1px);
+            color: #FFA500;
+        }
+
+        #tiendaButton:focus {
+            outline: none;
+        }
+
+        /* Estilos para el nuevo botón "USERNAME" */
+        #usernameButton {
+            position: absolute;
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-family: 'Press Start 2P', cursive;
+            font-size: 1.0em;
+            color: #eceff1;
+            text-shadow: 1px 1px 0px rgba(0, 0, 0, 0.7);
+            padding: 5px 10px;
+            white-space: nowrap;
+            transition: color 0.1s ease-out, transform 0.1s ease-out;
+            z-index: 10;
+            top: 250px; /* Mismo top que el botón de tienda */
+            right: 20px; /* Posición horizontal ajustada a la derecha */
+            text-align: right; /* Alineación a la derecha */
+        }
+
+        #usernameButton:hover {
+            color: #FFD700;
+        }
+
+        #usernameButton:active {
+            transform: translateY(1px);
+            color: #FFA500;
+        }
+
+        #usernameButton:focus {
+            outline: none;
+        }
+
+        /* Estilos para el botón de música */
+        #musicToggleButton {
+            position: absolute;
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-family: 'Press Start 2P', cursive;
+            font-size: 1.0em;
+            color: #eceff1;
+            text-shadow: 1px 1px 0px rgba(0, 0, 0, 0.7);
+            padding: 5px 10px;
+            white-space: nowrap;
+            transition: color 0.1s ease-out, transform 0.1s ease-out;
+            z-index: 10;
+            bottom: 20px; /* Posición en la parte inferior */
+            left: 20px; /* Posición a la izquierda */
+            text-align: left;
+        }
+
+        #musicToggleButton:hover {
+            color: #00BFFF; /* Color azul claro al pasar el ratón */
+        }
+
+        #musicToggleButton:active {
+            transform: translateY(1px);
+            color: #1E90FF; /* Color azul oscuro al hacer clic */
+        }
+
+        #musicToggleButton:focus {
+            outline: none;
+        }
+
+
+        /* Estilos para la imagen de la tienda */
+        .shop-icon {
+            position: absolute;
+            top: 130px; /* Posiciona el icono más arriba del texto TIENDA */
+            left: 20px; /* Ajusta la posición horizontal */
+            width: 150px; /* TAMAÑO GRANDE para el icono */
+            height: auto;
+            pointer-events: none; /* Asegura que no interfiera con los clics */
+            z-index: 9; /* Por debajo de los botones de texto si se superponen */
+        }
+        /* Estilos para el nuevo icono de usuario (similar al de la tienda) */
+        .user-icon {
+            position: absolute;
+            top: 130px; /* Mismo top que el icono de la tienda */
+            right: 20px; /* Posición horizontal ajustada a la derecha */
+            width: 150px; /* Mismo tamaño que el icono de la tienda */
+            height: auto;
+            pointer-events: none;
+            z-index: 9;
+            image-rendering: pixelated; /* Asegura el renderizado pixelado del SVG */
+        }
+
+        /* Estilos de la tienda */
+        .shop-container {
+            position: relative;
+            width: 90%; /* Ancho responsivo */
+            max-width: 800px; /* Ancho máximo para pantallas grandes */
+            height: 70vh; /* Altura responsiva */
+            max-height: 600px; /* Altura máxima */
+            background-image: url('https://i.ibb.co/L5r03R2/shop-bg.png'); /* Fondo de tienda pixel art */
+            background-size: cover;
+            background-position: center;
+            border: 5px solid #8B4513; /* Borde estilo pixel art */
+            border-radius: 8px;
+            box-shadow: 10px 10px 0px rgba(0, 0, 0, 0.5); /* Sombra para profundidad */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        .shop-header {
+            font-size: 2em;
+            margin-bottom: 20px;
+            color: #FFD700; /* Color dorado para el título */
+        }
+
+        .items-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); /* Columnas responsivas */
+            gap: 20px;
+            width: 100%;
+            flex-grow: 1; /* Permite que la cuadrícula ocupe el espacio disponible */
+            overflow-y: auto; /* Permite desplazamiento si hay muchos ítems */
+            padding: 10px;
+            box-sizing: border-box;
+            background-color: rgba(0, 0, 0, 0.5); /* Fondo semitransparente para los ítems */
+            border-radius: 5px;
+        }
+
+        .item-card {
+            background-color: #3f3f3f;
+            border: 2px solid #5A2D0D;
+            border-radius: 4px;
+            padding: 10px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            text-align: center;
+            box-shadow: 3px 3px 0px rgba(0, 0, 0, 0.5);
+        }
+
+        .item-card img {
+            width: 60px; /* Tamaño del icono del ítem */
+            height: 60px;
+            object-fit: contain;
+            image-rendering: pixelated; /* Mantiene el estilo pixel art */
+        }
+
+        .item-name {
+            font-size: 0.8em;
+            color: #fff;
+        }
+
+        .item-price {
+            font-size: 0.9em;
+            color: #90ee90; /* Verde claro para el precio */
+        }
+
+        /* Estilos para el botón de compra */
+        .buy-button {
+            appearance: none; -webkit-appearance: none; -moz-appearance: none;
+            background: none; border: none;
+            padding: 8px 15px;
+            cursor: pointer; text-align: center; box-sizing: border-box;
+
+            font-family: 'Press Start 2P', cursive;
+            font-size: 0.7em;
+            color: #eceff1;
+            text-shadow: 1px 1px 0px rgba(0, 0, 0, 0.7);
+            text-transform: uppercase;
+
+            background-color: #4CAF50; /* Verde vibrante */
+            border: 2px solid #2E8B57; /* Borde verde oscuro */
+            border-radius: 4px;
+            box-shadow:
+                inset 0px 1px 0px 0px rgba(255, 255, 255, 0.2),
+                0px 3px 0px 0px #1E8449; /* Sombra para profundidad */
+            transition: all 0.1s ease-out;
+            user-select: none;
+            min-width: 80px;
+        }
+
+        .buy-button:hover {
+            transform: translateY(-1px);
+            box-shadow:
+                inset 0px 1px 0px 0px rgba(255, 255, 255, 0.3),
+                0px 4px 0px 0px #1E8449;
+        }
+
+        .buy-button:active {
+            transform: translateY(1px);
+            box-shadow:
+                inset 0px 0px 0px 0px rgba(255, 255, 255, 0.1),
+                0px 1px 0px 0px #1E8449;
+        }
+
+        .buy-button:focus {
+            outline: none;
+        }
+
+        /* Botón de volver al menú */
+        .back-button {
+            margin-top: 20px;
+            padding: 10px 20px;
+            font-family: 'Press Start 2P', cursive;
+            font-size: 0.9em;
+            color: #fff;
+            background-color: #FF4500; /* Naranja rojizo */
+            border: 2px solid #B22222;
+            border-radius: 6px;
+            cursor: pointer;
+            box-shadow:
+                inset 0px 2px 0px 0px rgba(255, 255, 255, 0.15),
+                0px 4px 0px 0px #CD5C5C;
+            transition: all 0.1s ease-out;
+        }
+
+        .back-button:hover {
+            transform: translateY(-2px);
+            box-shadow:
+                inset 0px 2px 0px 0px rgba(255, 255, 255, 0.25),
+                0px 6px 0px 0px #CD5C5C;
+        }
+
+        .back-button:active {
+            transform: translateY(2px);
+            box-shadow:
+                inset 0px 1px 0px 0px rgba(255, 255, 255, 0.1),
+                0px 1px 0px 0px #CD5C5C;
+        }
+
+        .back-button:focus {
+            outline: none;
+        }
+
+        /* Estilos para el contenedor principal de autenticación */
+        .auth-container {
+            position: relative;
+            width: 90%; /* Ancho responsivo */
+            max-width: 400px; /* Ancho máximo para el formulario */
+            background-color: #2a2a2a; /* Un fondo un poco más claro que el body */
+            border: 5px solid #8B4513; /* Borde estilo pixel art */
+            border-radius: 8px;
+            box-shadow: 10px 10px 0px rgba(0, 0, 0, 0.5); /* Sombra para profundidad */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+            box-sizing: border-box;
+            gap: 15px; /* Espacio entre los elementos del formulario */
+        }
+
+        .auth-container h2 {
+            font-size: 1.5em;
+            color: #FFD700;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 0px rgba(0, 0, 0, 0.7);
+        }
+
+        /* Estilos para los inputs dentro de los formularios de autenticación */
+        .auth-container input[type="email"],
+        .auth-container input[type="password"],
+        .auth-container input[type="text"] {
+            width: calc(100% - 20px); /* Ancho del input con padding */
+            padding: 10px;
+            border: 2px solid #5A2D0D;
+            background-color: #3f3f3f;
+            color: #eceff1;
+            font-family: 'Inter', sans-serif; /* Fuente más legible para inputs */
+            font-size: 1em;
+            border-radius: 4px;
+            box-sizing: border-box;
+            text-shadow: none; /* Elimina sombra de texto para inputs */
+        }
+
+        .auth-container input::placeholder {
+            color: rgba(236, 239, 241, 0.5);
+        }
+
+        .auth-message {
+            color: #FF4500; /* Color para mensajes de error */
+            font-family: 'Inter', sans-serif;
+            font-size: 0.9em;
+            min-height: 1.5em; /* Espacio para el mensaje */
+            text-align: center;
+        }
+
+        /* Estilos para los botones generales de autenticación */
+        .auth-button {
+            width: 100%;
+            padding: 12px 20px;
+            font-family: 'Press Start 2P', cursive;
+            font-size: 0.9em;
+            color: #eceff1;
+            text-shadow: 2px 2px 0px rgba(0, 0, 0, 0.7);
+            text-transform: uppercase;
+            background-color: #4CAF50; /* Verde vibrante */
+            border: 2px solid #2E8B57;
+            border-radius: 6px;
+            box-shadow:
+                inset 0px 2px 0px 0px rgba(255, 255, 255, 0.15),
+                0px 4px 0px 0px #1E8449,
+                0px 6px 0px 0px #0F4F2E;
+            transition: all 0.1s ease-out;
+            cursor: pointer;
+        }
+
+        .auth-button.google-button {
+            background-color: #DD4B39; /* Rojo Google */
+            border: 2px solid #A23223;
+            box-shadow:
+                inset 0px 2px 0px 0px rgba(255, 255, 255, 0.15),
+                0px 4px 0px 0px #8B2C1F,
+                0px 6px 0px 0px #6A1E14;
+        }
+
+        .auth-button:hover {
+            transform: translateY(-2px);
+            box-shadow:
+                inset 0px 2px 0px 0px rgba(255, 255, 255, 0.25),
+                0px 6px 0px 0px #1E8449,
+                0px 8px 0px 0px #0F4F2E;
+        }
+
+        .auth-button.google-button:hover {
+            box-shadow:
+                inset 0px 2px 0px 0px rgba(255, 255, 255, 0.25),
+                0px 6px 0px 0px #8B2C1F,
+                0px 8px 0px 0px #6A1E14;
+        }
+
+        .auth-button:active {
+            transform: translateY(2px);
+            box-shadow:
+                inset 0px 1px 0px 0px rgba(255, 255, 255, 0.1),
+                0px 2px 0px 0px #1E8449,
+                0px 3px 0px 0px #0F4F2E;
+        }
+
+        .auth-button.google-button:active {
+            box-shadow:
+                inset 0px 1px 0px 0px rgba(255, 255, 255, 0.1),
+                0px 2px 0px 0px #8B2C1F,
+                0px 3px 0px 0px #6A1E14;
+        }
+
+        .auth-button:focus {
+            outline: none;
+        }
+
+        /* Alineación del botón de volver al menú de autenticación */
+        #backToMenuAuthButton {
+            margin-top: 20px;
+        }
+
+        /* Estilos específicos para los contenedores de elección y formularios */
+        .auth-screen-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+            gap: 15px;
+        }
+
+        /* Estilo para el mensaje de autoplay de música */
+        #musicAutoPlayMessage {
+            position: fixed;
+            bottom: 60px; /* Ajusta la posición en relación al botón de música */
+            left: 20px;
+            background-color: rgba(255, 255, 0, 0.8);
+            color: #333;
+            padding: 8px 15px;
+            border-radius: 5px;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.8em;
+            z-index: 100;
+            animation: fadeOut 5s forwards; /* Animación para desvanecerse */
+        }
+
+        @keyframes fadeOut {
+            0% { opacity: 1; }
+            80% { opacity: 1; }
+            100% { opacity: 0; display: none; }
+        }
+    </style>
+</head>
+<body>
+
+    <div id="mainMenuContainer">
+        <h1 class="game-title">THE SHIRUFFS ADVENTURE</h1>
+
+        <div class="character-row-container">
+            <!-- Se han quitado las imágenes de los personajes según lo solicitado -->
+            <!-- <img src="" alt="Esqueleto Izquierda" class="character-icon skeleton-icon"> -->
+            <!-- <img src="" alt="Personaje Central" class="character-icon main-character-icon"> -->
+            <!-- <img src="" alt="Esqueleto Derecha" class="character-icon skeleton-icon"> -->
+        </div>
+
+        <div class="game-menu">
+            <button id="playButton" class="pixel-button">
+                JUGAR
+            </button>
+
+            <div class="primary-buttons-group">
+                <button id="historiaButton" class="pixel-button">
+                    Historia
+                </button>
+                <button id="batallaButton" class="pixel-button">
+                    Batalla
+                </button>
+                <button id="arenaButton" class="pixel-button">
+                    Arena
+                </button>
+            </div>
+        </div>
+
+        <button id="tiendaButton" aria-label="Tienda">
+            TIENDA
+        </button>
+
+        <!-- Icono de Tienda Pixel Art -->
+        <img src="https://png.pngtree.com/png-vector/20220828/ourmid/pngtree-pixel-art-shop-icon-design-vector-png-image_6125107.png" onerror="this.onerror=null;this.src='https://placehold.co/150x150/000000/FFFFFF?text=TIENDA';" alt="Icono de Tienda Pixel Art" class="shop-icon">
+
+        <button id="usernameButton" aria-label="Usuario">
+            USUARIO
+        </button>
+
+        <!-- Icono de Usuario Pixel Art Transparente (SVG inline) -->
+        <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTUwIiBoZWlnaHQ9IjE1MCIgdmlld0JveD0iMCAwIDE2IDE2IiBmaWxsPSJub25lIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjxyZWN0IHg9IjYiIHk9IjIiIHdpZHRoPSI0IiBoZWlnaHQ9IjQiIGZpbGw9IiNlY2VmZjEiLz48cmVjdCB4PSI0IiB5PSI3IiB3aWR0aD0iOCIgaGVpZ2h0PSI1IiBmaWxsPSIjZWNlZmYxIi8+PC9zdmc+" onerror="this.onerror=null;this.src='https://placehold.co/150x150/000000/FFFFFF?text=USUARIO';" alt="Icono de Usuario Pixel Art Transparente" class="user-icon">
+
+        <button id="musicToggleButton" aria-label="Toggle Music">
+            MÚSICA ON
+        </button>
+
+        <audio id="background-music" loop autoplay>
+            <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg">
+            Tu navegador no soporta el elemento de audio.
+        </audio>
+    </div>
+
+    <div id="shopContainer" class="hidden">
+        <div class="shop-header">TIENDA</div>
+
+        <div class="items-grid">
+            <div class="item-card">
+                <img src="https://i.redd.it/vywwv3ofzcia1.gif" onerror="this.onerror=null;this.src='https://placehold.co/60x60/3f3f3f/FFFFFF?text=Espada';" alt="Espada">
+                <span class="item-name">Espada</span>
+                <span class="item-price">100 G</span>
+                <button class="buy-button" data-item="Espada">Comprar</button>
+            </div>
+
+            <div class="item-card">
+                <img src="https://img.freepik.com/vector-premium/escudo-hierro-estilo-pixel-art_475147-439.jpg" onerror="this.onerror=null;this.src='https://placehold.co/60x60/3f3f3f/FFFFFF?text=Escudo';" alt="Escudo">
+                <span class="item-name">Escudo</span>
+                <span class="item-price">50 G</span>
+                <button class="buy-button" data-item="Escudo de Madera">Comprar</button>
+            </div>
+
+            <div class="item-card">
+                <img src="https://opengameart.org/sites/default/files/styles/medium/public/Potion.png" onerror="this.onerror=null;this.src='https://placehold.co/60x60/3f3f3f/FFFFFF?text=Poción';" alt="Poción de Vida">
+                <span class="item-name">Poción de Vida</span>
+                <span class="item-price">20 G</span>
+                <button class="buy-button" data-item="Poción de Vida">Comprar</button>
+            </div>
+
+            <div class="item-card">
+                <img src="https://opengameart.org/sites/default/files/axe.png" onerror="this.onerror=null;this.src='https://placehold.co/60x60/3f3f3f/FFFFFF?text=Hacha';" alt="Hacha de Batalla">
+                <span class="item-name">Hacha de Batalla</span>
+                <span class="item-price">120 G</span>
+                <button class="buy-button" data-item="Hacha de Batalla">Comprar</button>
+            </div>
+        </div>
+
+        <button id="backToMenuButton" class="back-button">Volver al Menú</button>
+    </div>
+
+    <!-- Contenedor principal para todas las pantallas de autenticación -->
+    <!-- Este contenedor inicialmente está oculto y se mostrará al hacer clic en USUARIO -->
+    <div id="authContainer" class="auth-container hidden">
+        <!-- Área para mostrar mensajes de estado (éxito, error) -->
+        <p id="authMessage" class="auth-message"></p>
+
+        <!-- Pantalla de elección inicial: REGISTRARSE o INICIAR SESIÓN -->
+        <!-- Esta es la primera pantalla que se muestra cuando el usuario no está logeado y pulsa 'USUARIO' -->
+        <div id="authChoiceScreen" class="auth-screen-content hidden">
+            <h2>BIENVENIDO</h2>
+            <button id="showRegisterButton" class="auth-button">REGISTRARSE</button>
+            <button id="showLoginButton" class="auth-button">INICIAR SESIÓN</button>
+            <button id="backToMenuFromAuthChoices" class="back-button">VOLVER AL MENÚ</button>
+        </div>
+
+        <!-- Pantalla de Registro: Nombre de usuario, Correo y Contraseña -->
+        <!-- Se muestra al pulsar 'REGISTRARSE' en la pantalla de elección -->
+        <div id="registerScreen" class="auth-screen-content hidden">
+            <h2>REGISTRARSE</h2>
+            <input type="text" id="registerUsername" placeholder="Nombre de usuario (opcional)">
+            <input type="email" id="registerEmail" placeholder="Correo electrónico" required>
+            <input type="password" id="registerPassword" placeholder="Contraseña" required>
+            <button id="submitRegisterButton" class="auth-button">REGISTRARSE</button>
+            <button id="registerGoogleButton" class="auth-button google-button">INICIAR CON GOOGLE</button>
+            <button id="backToAuthChoicesFromRegister" class="back-button">VOLVER</button>
+        </div>
+
+        <!-- Pantalla de Inicio de Sesión: Correo y Contraseña -->
+        <!-- Se muestra al pulsar 'INICIAR SESIÓN' en la pantalla de elección -->
+        <div id="loginScreen" class="auth-screen-content hidden">
+            <h2>INICIAR SESIÓN</h2>
+            <input type="email" id="loginEmail" placeholder="Correo electrónico" required>
+            <input type="password" id="loginPassword" placeholder="Contraseña" required>
+            <button id="submitLoginButton" class="auth-button">INICIAR SESIÓN</button>
+            <button id="loginGoogleButtonForm" class="auth-button google-button">INICIAR CON GOOGLE</button>
+            <button id="backToAuthChoicesFromLogin" class="back-button">VOLVER</button>
+        </div>
+
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInAnonymously, signInWithCustomToken, createUserWithEmailAndPassword, signInWithEmailAndPassword, GoogleAuthProvider, signInWithPopup, signOut, updateProfile, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, doc, setDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        // CONFIGURACIÓN DE FIREBASE ACTUALIZADA CON TUS VALORES REALES
+        const firebaseConfig = {
+          apiKey: "AIzaSyCD8mVVgNoTUlymeEXAWuicwMTvox5-Iio",
+          authDomain: "shiruffs.firebaseapp.com",
+          projectId: "shiruffs",
+          storageBucket: "shiruffs.firebasestorage.app",
+          messagingSenderId: "632315824725",
+          appId: "1:632315824725:web:6708607a6ee95e7d9922dc"
+        };
+
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
+
+        // Inicializar Firebase
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        let currentUserId = null;
+
+        // Listener para los cambios de estado de autenticación de Firebase
+        onAuthStateChanged(auth, async (user) => {
+            if (user) {
+                currentUserId = user.uid;
+                console.log("Usuario autenticado:", user.email || "Anónimo", user.uid);
+
+                let displayUserName = 'USUARIO';
+                if (user.displayName) {
+                    displayUserName = user.displayName.toUpperCase();
+                } else if (user.email) {
+                    displayUserName = user.email.split('@')[0].toUpperCase();
+                }
+                document.getElementById('usernameButton').textContent = displayUserName;
+                document.getElementById('usernameButton').dataset.loggedIn = 'true';
+                document.getElementById('authMessage').textContent = `Bienvenido, ${displayUserName}.`;
+                showMainMenu();
+            } else {
+                currentUserId = null;
+                console.log("No hay usuario autenticado.");
+                document.getElementById('usernameButton').textContent = 'USUARIO';
+                document.getElementById('usernameButton').dataset.loggedIn = 'false';
+                document.getElementById('authMessage').textContent = '';
+
+                if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
+                    try {
+                        await signInWithCustomToken(auth, __initial_auth_token);
+                        console.log("Sesión iniciada con token personalizado.");
+                    } catch (error) {
+                        console.error("Error al iniciar sesión con token personalizado:", error);
+                        try {
+                            await signInAnonymously(auth);
+                            console.log("Sesión iniciada anónimamente.");
+                        } catch (anonError) {
+                            console.error("Error al iniciar sesión anónimamente:", anonError);
+                        }
+                    }
+                } else {
+                    try {
+                        await signInAnonymously(auth);
+                        console.log("Sesión iniciada anónimamente (sin token inicial).");
+                    } catch (anonError) {
+                        console.error("Error al iniciar sesión anónimamente:", anonError);
+                    }
+                }
+            }
+        });
+
+        const mainMenuContainer = document.getElementById('mainMenuContainer');
+        const shopContainer = document.getElementById('shopContainer');
+        const authContainer = document.getElementById('authContainer');
+
+        const authChoiceScreen = document.getElementById('authChoiceScreen');
+        const registerScreen = document.getElementById('registerScreen');
+        const loginScreen = document.getElementById('loginScreen');
+
+        const registerUsernameInput = document.getElementById('registerUsername');
+        const registerEmailInput = document.getElementById('registerEmail');
+        const registerPasswordInput = document.getElementById('registerPassword');
+        const loginEmailInput = document.getElementById('loginEmail');
+        const loginPasswordInput = document.getElementById('loginPassword');
+        const authMessage = document.getElementById('authMessage');
+
+        function hideAllScreens() {
+            mainMenuContainer.classList.add('hidden');
+            shopContainer.classList.add('hidden');
+            authContainer.classList.add('hidden');
+            authChoiceScreen.classList.add('hidden');
+            registerScreen.classList.add('hidden');
+            loginScreen.classList.add('hidden');
+            authMessage.textContent = '';
+        }
+
+        function showMainMenu() {
+            hideAllScreens();
+            mainMenuContainer.classList.remove('hidden');
+        }
+
+        function showShop() {
+            hideAllScreens();
+            shopContainer.classList.remove('hidden');
+        }
+
+        function showAuthChoiceScreen() {
+            hideAllScreens();
+            authContainer.classList.remove('hidden');
+            authChoiceScreen.classList.remove('hidden');
+        }
+
+        function showRegisterScreen() {
+            hideAllScreens();
+            authContainer.classList.remove('hidden');
+            registerScreen.classList.remove('hidden');
+            registerUsernameInput.value = '';
+            registerEmailInput.value = '';
+            registerPasswordInput.value = '';
+            authMessage.textContent = '';
+        }
+
+        function showLoginScreen() {
+            hideAllScreens();
+            authContainer.classList.remove('hidden');
+            loginScreen.classList.remove('hidden');
+            loginEmailInput.value = '';
+            loginPasswordInput.value = '';
+            authMessage.textContent = '';
+        }
+
+        document.getElementById('playButton').addEventListener('click', function() {
+            console.log('¡Botón "JUGAR" clickeado!');
+        });
+
+        document.getElementById('historiaButton').addEventListener('click', function() {
+            console.log('¡Botón "Historia" clickeado!');
+        });
+
+        document.getElementById('batallaButton').addEventListener('click', function() {
+            console.log('¡Botón "Batalla" clickeado!');
+        });
+
+        document.getElementById('arenaButton').addEventListener('click', function() {
+            console.log('¡Botón "Arena" clickeado!');
+        });
+
+        document.getElementById('tiendaButton').addEventListener('click', function() {
+            console.log('¡Botón "TIENDA" clickeado!');
+            showShop();
+        });
+
+        document.getElementById('backToMenuButton').addEventListener('click', function() {
+            console.log('Volver al Menú clickeado desde la tienda');
+            showMainMenu();
+        });
+
+        document.getElementById('usernameButton').addEventListener('click', function() {
+            if (this.dataset.loggedIn === 'true') {
+                const wantsToSignOut = window.confirm('¿Quieres cerrar sesión?');
+                if (wantsToSignOut) {
+                    signOut(auth).then(() => {
+                        console.log('Sesión cerrada.');
+                        authMessage.textContent = "Sesión cerrada.";
+                        setTimeout(() => authMessage.textContent = '', 2000);
+                        showMainMenu();
+                    }).catch(error => {
+                        console.error("Error al cerrar sesión:", error);
+                        authMessage.textContent = `Error al cerrar sesión: ${error.message}`;
+                    });
+                }
+            } else {
+                showAuthChoiceScreen();
+            }
+        });
+
+        document.getElementById('showRegisterButton').addEventListener('click', showRegisterScreen);
+        document.getElementById('showLoginButton').addEventListener('click', showLoginScreen);
+        document.getElementById('backToMenuFromAuthChoices').addEventListener('click', showMainMenu);
+
+        document.getElementById('backToAuthChoicesFromRegister').addEventListener('click', showAuthChoiceScreen);
+        document.getElementById('submitRegisterButton').addEventListener('click', async () => {
+            const username = registerUsernameInput.value;
+            const email = registerEmailInput.value;
+            const password = registerPasswordInput.value;
+            authMessage.textContent = 'Registrando...';
+            console.log(`Intentando registrar: Usuario=${username}, Email=${email}`);
+
+            if (!email || !password) {
+                authMessage.textContent = 'Por favor, introduce un correo y contraseña.';
+                return;
+            }
+
+            try {
+                const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+                const user = userCredential.user;
+
+                if (username) {
+                    await updateProfile(user, { displayName: username });
+                    console.log("Perfil de usuario actualizado con nombre:", username);
+                }
+
+                console.log("Usuario registrado con éxito:", user.email, "Nombre de visualización:", user.displayName || 'N/A');
+                authMessage.textContent = `Registro exitoso para ${user.displayName || user.email}. ¡Bienvenido!`;
+
+                const userRef = doc(db, `artifacts/${appId}/users/${user.uid}/profile`, 'data');
+                await setDoc(userRef, {
+                    email: user.email,
+                    displayName: user.displayName || '',
+                    username: username || '',
+                    createdAt: new Date()
+                }, { merge: true });
+                console.log("Documento de usuario creado/actualizado en Firestore.");
+
+                setTimeout(showMainMenu, 2000);
+            } catch (error) {
+                console.error("Error al registrar:", error);
+                authMessage.textContent = `Error al registrar: ${error.message}`;
+            }
+        });
+
+        document.getElementById('backToAuthChoicesFromLogin').addEventListener('click', showAuthChoiceScreen);
+        document.getElementById('submitLoginButton').addEventListener('click', async () => {
+            const email = loginEmailInput.value;
+            const password = loginPasswordInput.value;
+            authMessage.textContent = 'Iniciando sesión...';
+            console.log(`Intentando iniciar sesión: Email=${email}`);
+
+            if (!email || !password) {
+                authMessage.textContent = 'Por favor, introduce un correo y contraseña.';
+                return;
+            }
+
+            try {
+                const userCredential = await signInWithEmailAndPassword(auth, email, password);
+                console.log("Usuario logeado con éxito:", userCredential.user.email);
+                authMessage.textContent = `Inicio de sesión exitoso para ${userCredential.user.displayName || userCredential.user.email}. ¡Bienvenido!`;
+                setTimeout(showMainMenu, 2000);
+            } catch (error) {
+                console.error("Error al iniciar sesión:", error);
+                authMessage.textContent = `Error al iniciar sesión: ${error.message}`;
+            }
+        });
+
+        document.getElementById('registerGoogleButton').addEventListener('click', async () => {
+            authMessage.textContent = 'Iniciando sesión con Google...';
+            console.log('Intentando iniciar sesión con Google desde registro.');
+            const provider = new GoogleAuthProvider();
+            try {
+                const result = await signInWithPopup(auth, provider);
+                const user = result.user;
+                console.log("Usuario logeado con Google con éxito:", user.displayName || user.email);
+                authMessage.textContent = `Inicio de sesión exitoso con Google para ${user.displayName || user.email}. ¡Bienvenido!`;
+                const userRef = doc(db, `artifacts/${appId}/users/${user.uid}/profile`, 'data');
+                await setDoc(userRef, {
+                    email: user.email,
+                    displayName: user.displayName || '',
+                    createdAt: new Date()
+                }, { merge: true });
+                console.log("Documento de usuario (Google) creado/actualizado en Firestore.");
+                setTimeout(showMainMenu, 2000);
+            } catch (error) {
+                console.error("Error al iniciar sesión con Google:", error);
+                authMessage.textContent = `Error al iniciar sesión con Google: ${error.message}`;
+            }
+        });
+
+        document.getElementById('loginGoogleButtonForm').addEventListener('click', async () => {
+            authMessage.textContent = 'Iniciando sesión con Google...';
+            console.log('Intentando iniciar sesión con Google desde login.');
+            const provider = new GoogleAuthProvider();
+            try {
+                const result = await signInWithPopup(auth, provider);
+                const user = result.user;
+                console.log("Usuario logeado con Google con éxito:", user.displayName || user.email);
+                authMessage.textContent = `Inicio de sesión exitoso con Google para ${user.displayName || user.email}. ¡Bienvenido!`;
+                const userRef = doc(db, `artifacts/${appId}/users/${user.uid}/profile`, 'data');
+                await setDoc(userRef, {
+                    email: user.email,
+                    displayName: user.displayName || '',
+                    createdAt: new Date()
+                }, { merge: true });
+                console.log("Documento de usuario (Google) creado/actualizado en Firestore.");
+                setTimeout(showMainMenu, 2000);
+            } catch (error) {
+                console.error("Error al iniciar sesión con Google:", error);
+                authMessage.textContent = `Error al iniciar sesión con Google: ${e.message}`;
+            }
+        });
+
+        const backgroundMusic = document.getElementById('background-music');
+        const musicToggleButton = document.getElementById('musicToggleButton');
+
+        backgroundMusic.play().catch(() => {
+            console.log("Autoplay bloqueado, esperando interacción del usuario para reproducir música.");
+            musicToggleButton.textContent = "MÚSICA OFF";
+            const musicMessage = document.createElement('div');
+            musicMessage.id = 'musicAutoPlayMessage';
+            musicMessage.textContent = 'Haz clic en el botón MÚSICA para activar el sonido.';
+            document.body.appendChild(musicMessage);
+        });
+
+        musicToggleButton.addEventListener('click', function() {
+            if (backgroundMusic.paused) {
+                backgroundMusic.play()
+                    .then(() => {
+                        musicToggleButton.textContent = "MÚSICA ON";
+                        const musicMessage = document.getElementById('musicAutoPlayMessage');
+                        if (musicMessage) {
+                            musicMessage.remove();
+                        }
+                    })
+                    .catch(e => console.log("Error al reproducir música:", e));
+            } else {
+                backgroundMusic.pause();
+                musicToggleButton.textContent = "MÚSICA OFF";
+            }
+        });
+
+        function resumeAudioOnFirstInteraction() {
+            if (backgroundMusic.paused) {
+                backgroundMusic.play()
+                    .then(() => {
+                        console.log("Música reanudada por interacción del usuario.");
+                        musicToggleButton.textContent = "MÚSICA ON";
+                        document.body.removeEventListener('click', resumeAudioOnFirstInteraction);
+                        const musicMessage = document.getElementById('musicAutoPlayMessage');
+                        if (musicMessage) {
+                            musicMessage.remove();
+                        }
+                    })
+                    .catch(e => console.log("Error al reanudar música al hacer clic:", e));
+            } else {
+                document.body.removeEventListener('click', resumeAudioOnFirstInteraction);
+            }
+        }
+
+        document.body.addEventListener('click', resumeAudioOnFirstInteraction);
+
+        showMainMenu();
+    </script>
+
+</body>
+</html>
