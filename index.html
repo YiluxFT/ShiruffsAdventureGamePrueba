@@ -622,7 +622,7 @@
             USUARIO
         </button>
 
-        <!-- Icono de Usuario Pixel Art Transparente (SVG inline) -->
+        <!-- Icono de Usuario Pixel Art Transparente (SVG inline) - Revertido a la versión anterior -->
         <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTUwIiBoZWlnaHQ9IjE1MCIgdmlld0JveD0iMCAwIDE2IDE2IiBmaWxsPSJub25lIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjxyZWN0IHg9IjYiIHk9IjIiIHdpZHRoPSI0IiBoZWlnaHQ9IjQiIGZpbGw9IiNlY2VmZjEiLz48cmVjdCB4PSI0IiB5PSI3IiB3aWR0aD0iOCIgaGVpZ2h0PSI1IiBmaWxsPSIjZWNlZmYxIi8+PC9zdmc+" onerror="this.onerror=null;this.src='https://placehold.co/150x150/000000/FFFFFF?text=USUARIO';" alt="Icono de Usuario Pixel Art Transparente" class="user-icon">
 
         <button id="musicToggleButton" aria-label="Toggle Music">
@@ -745,9 +745,11 @@
                 console.log("Usuario autenticado:", user.email || "Anónimo", user.uid);
 
                 let displayUserName = 'USUARIO';
+                // Prioriza el displayName (nombre elegido al registrarse o por Google)
                 if (user.displayName) {
                     displayUserName = user.displayName.toUpperCase();
                 } else if (user.email) {
+                    // Si no hay displayName, usa la parte del email antes del @
                     displayUserName = user.email.split('@')[0].toUpperCase();
                 }
                 document.getElementById('usernameButton').textContent = displayUserName;
@@ -761,6 +763,7 @@
                 document.getElementById('usernameButton').dataset.loggedIn = 'false';
                 document.getElementById('authMessage').textContent = '';
 
+                // Intenta iniciar sesión anónimamente si no hay un usuario logeado
                 if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
                     try {
                         await signInWithCustomToken(auth, __initial_auth_token);
@@ -873,6 +876,7 @@
 
         document.getElementById('usernameButton').addEventListener('click', function() {
             if (this.dataset.loggedIn === 'true') {
+                // IMPORTANT: In a production environment, replace window.confirm with a custom modal
                 const wantsToSignOut = window.confirm('¿Quieres cerrar sesión?');
                 if (wantsToSignOut) {
                     signOut(auth).then(() => {
@@ -911,6 +915,7 @@
                 const userCredential = await createUserWithEmailAndPassword(auth, email, password);
                 const user = userCredential.user;
 
+                // Guarda el displayName en el perfil de Firebase Auth
                 if (username) {
                     await updateProfile(user, { displayName: username });
                     console.log("Perfil de usuario actualizado con nombre:", username);
@@ -919,11 +924,13 @@
                 console.log("Usuario registrado con éxito:", user.email, "Nombre de visualización:", user.displayName || 'N/A');
                 authMessage.textContent = `Registro exitoso para ${user.displayName || user.email}. ¡Bienvenido!`;
 
+                // Guarda información adicional del usuario en Firestore
+                // El path de Firestore debe ser /artifacts/{appId}/users/{userId}/{your_collection_name}
                 const userRef = doc(db, `artifacts/${appId}/users/${user.uid}/profile`, 'data');
                 await setDoc(userRef, {
                     email: user.email,
                     displayName: user.displayName || '',
-                    username: username || '',
+                    username: username || '', // Guarda el nombre de usuario explícitamente en Firestore
                     createdAt: new Date()
                 }, { merge: true });
                 console.log("Documento de usuario creado/actualizado en Firestore.");
@@ -967,6 +974,7 @@
                 const user = result.user;
                 console.log("Usuario logeado con Google con éxito:", user.displayName || user.email);
                 authMessage.textContent = `Inicio de sesión exitoso con Google para ${user.displayName || user.email}. ¡Bienvenido!`;
+                // Guarda o actualiza información del usuario en Firestore (incluido displayName de Google)
                 const userRef = doc(db, `artifacts/${appId}/users/${user.uid}/profile`, 'data');
                 await setDoc(userRef, {
                     email: user.email,
@@ -990,6 +998,7 @@
                 const user = result.user;
                 console.log("Usuario logeado con Google con éxito:", user.displayName || user.email);
                 authMessage.textContent = `Inicio de sesión exitoso con Google para ${user.displayName || user.email}. ¡Bienvenido!`;
+                // Guarda o actualiza información del usuario en Firestore (incluido displayName de Google)
                 const userRef = doc(db, `artifacts/${appId}/users/${user.uid}/profile`, 'data');
                 await setDoc(userRef, {
                     email: user.email,
