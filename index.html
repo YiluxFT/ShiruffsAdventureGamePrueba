@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>The Shiruffs Adventure - Menú Principal y Tienda</title>
+    <!-- Favicon de la página -->
+    <link rel="icon" type="image/png" href="https://i.imgur.com/TN2qxJ8.png">
     <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@700&display=swap" rel="stylesheet">
     <style>
@@ -32,173 +34,110 @@
             display: none !important;
         }
 
-        /* Título del juego */
-        .game-title {
-            position: absolute;
-            top: 30px; /* Ajustado para mover el título más arriba y centrarlo mejor */
-            left: 50%; /* Centra horizontalmente el elemento */
-            transform: translateX(-50%); /* Ajusta la posición para centrado perfecto */
-            white-space: nowrap; /* Evita que el texto se rompa en varias líneas */
+        /* Contenedor principal para todas las pantallas de juego (excepto el menú principal) */
+        /* Asegura que ocupen toda la pantalla cuando estén activas */
+        .game-view-container {
+            position: fixed; /* Ocupa todo el viewport */
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background-color: #1a1a1a; /* Fondo consistente */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 0; /* Sin padding en el contenedor para maximizar el área de juego */
+            box-sizing: border-box;
             font-family: 'Press Start 2P', cursive;
-            font-size: 2.5em; /* Tamaño grande para el título */
-            color: #FF8C00; /* Color naranja vibrante "a lo Dan the Man" */
-            /* Sombra más pronunciada y pixelada */
-            text-shadow: 6px 6px 0px #8B4513, /* Sombra principal más oscura y nítida */
-                         10px 10px 0px rgba(0, 0, 0, 0.5); /* Sombra de profundidad más suave */
-            z-index: 15; /* Asegura que esté por encima de todo */
+            color: #eceff1;
+            text-shadow: 1px 1px 0px rgba(0, 0, 0, 0.7);
+            z-index: 100; /* Asegura que esté por encima de todo */
         }
 
-        /* Contenedor para los personajes principales */
+        /* Título del juego (solo en el menú principal) */
+        .game-title {
+            position: absolute;
+            top: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            white-space: nowrap;
+            font-family: 'Press Start 2P', cursive;
+            font-size: 2.5em;
+            color: #FF8C00;
+            text-shadow: 6px 6px 0px #8B4513, 10px 10px 0px rgba(0, 0, 0, 0.5);
+            z-index: 15;
+        }
+
+        /* Contenedor para los personajes principales (solo en el menú principal) */
         .character-row-container {
             position: absolute;
-            top: 100px; /* Ajusta la altura de los personajes desde arriba, movido más abajo para el título */
+            top: 100px;
             left: 50%;
             transform: translateX(-50%);
             display: flex;
-            gap: 15px; /* Espacio entre los personajes, ajustado para el nuevo diseño */
-            align-items: flex-end; /* Alinea los personajes por la base */
+            gap: 15px;
+            align-items: flex-end;
             justify-content: center;
-            z-index: 8; /* Asegura que estén detrás de los botones de la esquina si se superponen */
+            z-index: 8;
         }
 
         .character-icon {
-            height: auto; /* Altura automática para mantener proporción */
-            object-fit: contain; /* Asegura que la imagen se ajuste */
-            image-rendering: pixelated; /* Mantiene el estilo pixel art */
-            pointer-events: none; /* No son interactivos, son decorativos */
+            height: auto;
+            object-fit: contain;
+            image-rendering: pixelated;
+            pointer-events: none;
         }
 
         .main-character-icon {
-            width: 350px; /* Tamaño muy grande para el personaje central */
+            width: 350px;
         }
 
         .skeleton-icon {
-            width: 200px; /* Tamaño para los esqueletos, más pequeños que el central */
+            width: 200px;
         }
 
-        /* Contenedor principal para centrar el grupo de botones */
+        /* Contenedor principal para centrar el grupo de botones (solo en el menú principal) */
         .game-menu {
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 30px; /* Espacio entre el botón JUGAR y el grupo de abajo */
+            gap: 30px;
             padding: 20px;
-            z-index: 10; /* AHORA EL MENÚ DE JUEGO ESTÁ ENCIMA DE LOS PERSONAJES */
-            position: relative; /* Necesario para que z-index funcione correctamente */
-            margin-top: 170px; /* MOVido aún más abajo */
+            z-index: 10;
+            position: relative;
+            margin-top: 170px;
         }
 
-        /* Estilos generales para el botón estilo pixel art (JUGAR, Historia, Batalla, Arena) */
+        /* Estilos generales para el botón estilo pixel art */
         .pixel-button {
-            appearance: none; /* Restablece estilos por defecto del navegador */
-            -webkit-appearance: none;
-            -moz-appearance: none;
-            background: none;
-            border: none;
-            padding: 15px 30px; /* Espaciado interno estándar */
-            cursor: pointer;
-            text-align: center;
-            box-sizing: border-box;
-
+            appearance: none; -webkit-appearance: none; -moz-appearance: none;
+            background: none; border: none;
+            padding: 15px 35px;
+            cursor: pointer; text-align: center; box-sizing: border-box;
             font-family: 'Press Start 2P', cursive;
-            font-size: 1.2em; /* Fuente ligeramente más grande */
+            font-size: 1.2em;
             color: #eceff1;
             text-shadow: 2px 2px 0px rgba(0, 0, 0, 0.7);
             text-transform: uppercase;
-
             background-color: #3f3f3f;
             border: 2px solid #8B4513;
-            border-radius: 6px; /* Aseguramos un valor sensato */
-            box-shadow:
-                inset  0px 2px 0px 0px rgba(255, 255, 255, 0.15),
-                0px 4px 0px 0px #5A2D0D,
-                0px 6px 0px 0px #3F1D08;
+            border-radius: 6px;
+            box-shadow: inset 0px 2px 0px 0px rgba(255, 255, 255, 0.15), 0px 4px 0px 0px #5A2D0D, 0px 6px 0px 0px #3F1D08;
             transition: all 0.1s ease-out;
-            user-select: none;
-            -webkit-user-select: none;
-            -moz-user-select: none;
-            -ms-user-select: none;
-            min-width: 200px; /* Ancho mínimo para consistencia */
+            user-select: none; -webkit-user-select: none; -moz-user-select: none; -ms-user-select: none;
+            min-width: 220px;
         }
 
-        .pixel-button:hover {
-            transform: translateY(-2px);
-            box-shadow:
-                inset 0px 2px 0px 0px rgba(255, 255, 255, 0.25),
-                0px 6px 0px 0px #5A2D0D,
-                0px 8px 0px 0px #3F1D08;
-        }
-
-        .pixel-button:active {
-            transform: translateY(2px);
-            box-shadow:
-                inset 0px 1px 0px 0px rgba(255, 255, 255, 0.1),
-                0px 2px 0px 0px #5A2D0D,
-                0px 3px 0px 0px #3F1D08;
-        }
-
-        .pixel-button:focus {
-            outline: none;
-        }
+        .pixel-button:hover { transform: translateY(-2px); box-shadow: inset 0px 2px 0px 0px rgba(255, 255, 255, 0.25), 0px 6px 0px 0px #5A2D0D, 0px 8px 0px 0px #3F1D08; }
+        .pixel-button:active { transform: translateY(2px); box-shadow: inset 0px 1px 0px 0px rgba(255, 255, 255, 0.1), 0px 2px 0px 0px #5A2D0D, 0px 3px 0px 0px #3F1D08; }
+        .pixel-button:focus { outline: none; }
 
         /* Estilos para el botón "JUGAR" (más grande) */
-        #playButton {
-            padding: 20px 40px; /* Más padding para hacerlo más grande */
-            font-size: 1.5em; /* Fuente un poco más grande */
-            min-width: 250px; /* Asegura un tamaño consistente */
-        }
+        #playButton { padding: 20px 40px; font-size: 1.5em; min-width: 250px; }
 
-        /* Contenedor para los botones "Historia", "Batalla", "Arena" (en fila) */
-        .primary-buttons-group {
-            display: flex;
-            flex-direction: row; /* Coloca los botones uno al lado del otro */
-            justify-content: center; /* Centra los botones dentro de su grupo */
-            align-items: center;
-            gap: 20px; /* Espacio entre los botones */
-            width: 100%; /* Ocupa el ancho completo de su padre (.game-menu) */
-            max-width: 650px; /* Ancho máximo para evitar que sean demasiado grandes */
-        }
-
-        /* Asegura que los botones del grupo ocupen espacio equitativo */
-        .primary-buttons-group .pixel-button {
-            flex-grow: 1;
-            max-width: 200px; /* Ancho máximo individual para estos botones */
-        }
-
-        /* Estilos para el botón de texto "TIENDA" */
-        #tiendaButton {
-            position: absolute; /* Posicionamiento absoluto respecto al body */
-            background: none; /* Sin fondo */
-            border: none; /* Sin borde */
-            cursor: pointer;
-            font-family: 'Press Start 2P', cursive; /* Fuente Pixel Art para Tienda */
-            font-size: 1.0em; /* Fuente más grande para Tienda */
-            color: #eceff1;
-            text-shadow: 1px 1px 0px rgba(0, 0, 0, 0.7);
-            padding: 5px 10px;
-            white-space: nowrap;
-            transition: color 0.1s ease-out, transform 0.1s ease-out;
-            z-index: 10;
-            top: 250px; /* Posición del texto TIENDA */
-            left: 20px; /* Posición horizontal ajustada */
-            text-align: left;
-        }
-
-        #tiendaButton:hover {
-            color: #FFD700;
-        }
-
-        #tiendaButton:active {
-            transform: translateY(1px);
-            color: #FFA500;
-        }
-
-        #tiendaButton:focus {
-            outline: none;
-        }
-
-        /* Estilos para el nuevo botón "USERNAME" */
-        #usernameButton {
+        /* Estilos para los botones de texto de la esquina (Tienda, Usuario, Logros, Próximamente) */
+        .corner-button {
             position: absolute;
             background: none;
             border: none;
@@ -211,78 +150,59 @@
             white-space: nowrap;
             transition: color 0.1s ease-out, transform 0.1s ease-out;
             z-index: 10;
-            top: 250px; /* Mismo top que el botón de tienda */
-            right: 20px; /* Posición horizontal ajustada a la derecha */
-            text-align: right; /* Alineación a la derecha */
         }
+        .corner-button:hover { color: #FFD700; }
+        .corner-button:active { transform: translateY(1px); color: #FFA500; }
+        .corner-button:focus { outline: none; }
 
-        #usernameButton:hover {
-            color: #FFD700;
-        }
+        #tiendaButton { top: 250px; left: 20px; text-align: left; }
+        #usernameButton { top: 250px; right: 20px; text-align: right; }
+        #logrosButton { top: 350px; left: 20px; text-align: left; display: flex; align-items: center; }
+        #upcomingButton { top: 350px; right: 20px; text-align: right; display: flex; align-items: center; flex-direction: row-reverse; }
 
-        #usernameButton:active {
-            transform: translateY(1px);
-            color: #FFA500;
-        }
-
-        #usernameButton:focus {
-            outline: none;
-        }
-
-        /* Estilos para el botón de música */
         #musicToggleButton {
             position: absolute;
-            background: none;
-            border: none;
-            cursor: pointer;
-            font-family: 'Press Start 2P', cursive;
-            font-size: 1.0em;
-            color: #eceff1;
-            text-shadow: 1px 1px 0px rgba(0, 0, 0, 0.7);
-            padding: 5px 10px;
-            white-space: nowrap;
+            bottom: 20px; left: 20px;
+            text-align: left;
+            background: none; border: none; cursor: pointer;
+            font-family: 'Press Start 2P', cursive; font-size: 1.0em;
+            color: #eceff1; text-shadow: 1px 1px 0px rgba(0, 0, 0, 0.7);
+            padding: 5px 10px; white-space: nowrap;
             transition: color 0.1s ease-out, transform 0.1s ease-out;
             z-index: 10;
-            bottom: 20px; /* Posición en la parte inferior */
-            left: 20px; /* Posición a la izquierda */
-            text-align: left;
         }
+        #musicToggleButton:hover { color: #00BFFF; }
+        #musicToggleButton:active { transform: translateY(1px); color: #1E90FF; }
 
-        #musicToggleButton:hover {
-            color: #00BFFF; /* Color azul claro al pasar el ratón */
-        }
-
-        #musicToggleButton:active {
-            transform: translateY(1px);
-            color: #1E90FF; /* Color azul oscuro al hacer clic */
-        }
-
-        #musicToggleButton:focus {
-            outline: none;
-        }
-
-
-        /* Estilos para la imagen de la tienda */
-        .shop-icon {
+        #fullscreenButton {
             position: absolute;
-            top: 130px; /* Posiciona el icono más arriba del texto TIENDA */
-            left: 20px; /* Ajusta la posición horizontal */
-            width: 150px; /* TAMAÑO GRANDE para el icono */
-            height: auto;
-            pointer-events: none; /* Asegura que no interfiera con los clics */
-            z-index: 9; /* Por debajo de los botones de texto si se superponen */
+            bottom: 20px; right: 20px;
+            text-align: right;
+            background: none; border: none; cursor: pointer;
+            font-family: 'Press Start 2P', cursive;
+            font-size: 1.0em;
+            color: #eceff1; text-shadow: 1px 1px 0px rgba(0, 0, 0, 0.7);
+            padding: 5px 10px; white-space: nowrap;
+            transition: color 0.1s ease-out, transform 0.1s ease-out;
+            z-index: 10;
         }
-        /* Estilos para el nuevo icono de usuario (similar al de la tienda) */
-        .user-icon {
-            position: absolute;
-            top: 130px; /* Mismo top que el icono de la tienda */
-            right: 20px; /* Posición horizontal ajustada a la derecha */
-            width: 150px; /* Mismo tamaño que el icono de la tienda */
+        #fullscreenButton:hover { color: #FFD700; }
+        #fullscreenButton:active { transform: translateY(1px); color: #FFA500; }
+
+
+        .shop-icon, .user-icon-svg, #logrosButton img, #upcomingButton img {
+            position: absolute; /* Reajustado para que estén relativos al body principal */
             height: auto;
             pointer-events: none;
             z-index: 9;
-            image-rendering: pixelated; /* Asegura el renderizado pixelado del SVG */
+            image-rendering: pixelated;
         }
+
+        .shop-icon { top: 130px; left: 20px; width: 150px; }
+        .user-icon-svg { top: 130px; right: 20px; width: 150px; }
+        #logrosButton img { width: 40px; height: 40px; margin-right: 10px; position: static; }
+        #upcomingButton img { width: 40px; height: 40px; margin-left: 10px; margin-right: 0; position: static; }
+
 
         /* Estilos de la tienda */
         .shop-container {
@@ -302,283 +222,449 @@
             align-items: center;
             padding: 20px;
             box-sizing: border-box;
+            z-index: 100; /* Asegura que la tienda esté por encima */
         }
 
-        .shop-header {
-            font-size: 2em;
-            margin-bottom: 20px;
-            color: #FFD700; /* Color dorado para el título */
-        }
+        .shop-header { font-size: 2em; margin-bottom: 20px; color: #FFD700; }
 
         .items-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); /* Columnas responsivas */
+            display: grid; /* Cambiado a grid para mayor control */
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); /* 2-4 columnas responsivas */
             gap: 20px;
             width: 100%;
-            flex-grow: 1; /* Permite que la cuadrícula ocupe el espacio disponible */
-            overflow-y: auto; /* Permite desplazamiento si hay muchos ítems */
+            flex-grow: 1;
+            overflow-y: auto;
             padding: 10px;
             box-sizing: border-box;
-            background-color: rgba(0, 0, 0, 0.5); /* Fondo semitransparente para los ítems */
+            background-color: rgba(0, 0, 0, 0.5);
             border-radius: 5px;
         }
 
         .item-card {
-            background-color: #3f3f3f;
-            border: 2px solid #5A2D0D;
-            border-radius: 4px;
-            padding: 10px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 8px;
-            text-align: center;
-            box-shadow: 3px 3px 0px rgba(0, 0, 0, 0.5);
+            background-color: #3f3f3f; border: 2px solid #5A2D0D; border-radius: 4px;
+            padding: 10px; display: flex; flex-direction: column; align-items: center;
+            gap: 8px; text-align: center; box-shadow: 3px 3px 0px rgba(0, 0, 0, 0.5);
+            min-width: 120px; max-width: 150px;
         }
+        .item-card img { width: 60px; height: 60px; object-fit: contain; image-rendering: pixelated; }
+        .item-card img.scythe-icon { width: 120px; height: 120px; }
+        .item-name { font-size: 0.8em; color: #fff; }
+        .item-price { font-size: 0.9em; color: #90ee90; }
 
-        .item-card img {
-            width: 60px; /* Tamaño del icono del ítem */
-            height: 60px;
-            object-fit: contain;
-            image-rendering: pixelated; /* Mantiene el estilo pixel art */
-        }
-
-        .item-name {
-            font-size: 0.8em;
-            color: #fff;
-        }
-
-        .item-price {
-            font-size: 0.9em;
-            color: #90ee90; /* Verde claro para el precio */
-        }
-
-        /* Estilos para el botón de compra */
         .buy-button {
             appearance: none; -webkit-appearance: none; -moz-appearance: none;
-            background: none; border: none;
-            padding: 8px 15px;
-            cursor: pointer; text-align: center; box-sizing: border-box;
-
-            font-family: 'Press Start 2P', cursive;
-            font-size: 0.7em;
-            color: #eceff1;
-            text-shadow: 1px 1px 0px rgba(0, 0, 0, 0.7);
+            background: none; border: none; padding: 8px 15px; cursor: pointer;
+            text-align: center; box-sizing: border-box;
+            font-family: 'Press Start 2P', cursive; font-size: 0.7em;
+            color: #eceff1; text-shadow: 1px 1px 0px rgba(0, 0, 0, 0.7);
             text-transform: uppercase;
-
-            background-color: #4CAF50; /* Verde vibrante */
-            border: 2px solid #2E8B57; /* Borde verde oscuro */
-            border-radius: 4px;
-            box-shadow:
-                inset 0px 1px 0px 0px rgba(255, 255, 255, 0.2),
-                0px 3px 0px 0px #1E8449; /* Sombra para profundidad */
-            transition: all 0.1s ease-out;
-            user-select: none;
-            min-width: 80px;
+            background-color: #4CAF50; border: 2px solid #2E8B57; border-radius: 4px;
+            box-shadow: inset 0px 1px 0px 0px rgba(255, 255, 255, 0.2), 0px 3px 0px 0px #1E8449;
+            transition: all 0.1s ease-out; user-select: none; min-width: 80px;
         }
-
-        .buy-button:hover {
-            transform: translateY(-1px);
-            box-shadow:
-                inset 0px 1px 0px 0px rgba(255, 255, 255, 0.3),
-                0px 4px 0px 0px #1E8449;
-        }
-
-        .buy-button:active {
-            transform: translateY(1px);
-            box-shadow:
-                inset 0px 0px 0px 0px rgba(255, 255, 255, 0.1),
-                0px 1px 0px 0px #1E8449;
-        }
-
-        .buy-button:focus {
-            outline: none;
-        }
+        .buy-button:hover { transform: translateY(-1px); box-shadow: inset 0px 1px 0px 0px rgba(255, 255, 255, 0.3), 0px 4px 0px 0px #1E8449; }
+        .buy-button:active { transform: translateY(1px); box-shadow: inset 0px 0px 0px 0px rgba(255, 255, 255, 0.1), 0px 1px 0px 0px #1E8449; }
+        .buy-button:focus { outline: none; }
 
         /* Botón de volver al menú */
         .back-button {
-            margin-top: 20px;
-            padding: 10px 20px;
-            font-family: 'Press Start 2P', cursive;
-            font-size: 0.9em;
-            color: #fff;
-            background-color: #FF4500; /* Naranja rojizo */
-            border: 2px solid #B22222;
-            border-radius: 6px;
-            cursor: pointer;
-            box-shadow:
-                inset 0px 2px 0px 0px rgba(255, 255, 255, 0.15),
-                0px 4px 0px 0px #CD5C5C;
+            margin-top: 20px; padding: 10px 20px;
+            font-family: 'Press Start 2P', cursive; font-size: 0.9em;
+            color: #fff; background-color: #FF4500; border: 2px solid #B22222;
+            border-radius: 6px; cursor: pointer;
+            box-shadow: inset 0px 2px 0px 0px rgba(255, 255, 255, 0.15), 0px 4px 0px 0px #CD5C5C;
             transition: all 0.1s ease-out;
         }
+        .back-button:hover { transform: translateY(-2px); box-shadow: inset 0px 2px 0px 0px rgba(255, 255, 255, 0.25), 0px 6px 0px 0px #CD5C5C; }
+        /* Removed translateY for active to avoid "bugged" feeling */
+        .back-button:active { box-shadow: inset 0px 1px 0px 0px rgba(255, 255, 255, 0.1), 0px 1px 0px 0px #CD5C5C; }
+        .back-button:focus { outline: none; }
 
-        .back-button:hover {
-            transform: translateY(-2px);
-            box-shadow:
-                inset 0px 2px 0px 0px rgba(255, 255, 255, 0.25),
-                0px 6px 0px 0px #CD5C5C;
-        }
-
-        .back-button:active {
-            transform: translateY(2px);
-            box-shadow:
-                inset 0px 1px 0px 0px rgba(255, 255, 255, 0.1),
-                0px 1px 0px 0px #CD5C5C;
-        }
-
-        .back-button:focus {
-            outline: none;
-        }
-
-        /* Estilos para el contenedor principal de autenticación */
+        /* Contenedor principal para autenticación */
         .auth-container {
             position: relative;
-            width: 90%; /* Ancho responsivo */
-            max-width: 400px; /* Ancho máximo para el formulario */
-            background-color: #2a2a2a; /* Un fondo un poco más claro que el body */
-            border: 5px solid #8B4513; /* Borde estilo pixel art */
-            border-radius: 8px;
-            box-shadow: 10px 10px 0px rgba(0, 0, 0, 0.5); /* Sombra para profundidad */
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            padding: 20px;
-            box-sizing: border-box;
-            gap: 15px; /* Espacio entre los elementos del formulario */
+            width: 90%;
+            max-width: 600px; /* Aumentado para mejor visualización en desktop */
+            height: 80vh; /* Para que ocupe más altura y el contenido no se comprima en móvil */
+            max-height: 700px;
+            background-color: #2a2a2a; border: 5px solid #8B4513; border-radius: 8px;
+            box-shadow: 10px 10px 0px rgba(0, 0, 0, 0.5);
+            display: flex; flex-direction: column; align-items: center;
+            padding: 20px; box-sizing: border-box; gap: 15px;
         }
-
-        .auth-container h2 {
-            font-size: 1.5em;
-            color: #FFD700;
-            margin-bottom: 10px;
-            text-shadow: 2px 2px 0px rgba(0, 0, 0, 0.7);
+        .auth-container h2 { font-size: 1.5em; color: #FFD700; margin-bottom: 10px; text-shadow: 2px 2px 0px rgba(0, 0, 0, 0.7); }
+        .auth-container input[type="email"], .auth-container input[type="password"], .auth-container input[type="text"] {
+            width: calc(100% - 20px); padding: 10px; border: 2px solid #5A2D0D;
+            background-color: #3f3f3f; color: #eceff1; font-family: 'Inter', sans-serif;
+            font-size: 1em; border-radius: 4px; box-sizing: border-box; text-shadow: none;
+            text-transform: uppercase; text-align: center;
         }
-
-        /* Estilos para los inputs dentro de los formularios de autenticación */
-        .auth-container input[type="email"],
-        .auth-container input[type="password"],
-        .auth-container input[type="text"] {
-            width: calc(100% - 20px); /* Ancho del input con padding */
-            padding: 10px;
-            border: 2px solid #5A2D0D;
-            background-color: #3f3f3f;
-            color: #eceff1;
-            font-family: 'Inter', sans-serif; /* Fuente más legible para inputs */
-            font-size: 1em;
-            border-radius: 4px;
-            box-sizing: border-box;
-            text-shadow: none; /* Elimina sombra de texto para inputs */
-        }
-
-        .auth-container input::placeholder {
-            color: rgba(236, 239, 241, 0.5);
-        }
-
-        .auth-message {
-            color: #FF4500; /* Color para mensajes de error */
-            font-family: 'Inter', sans-serif;
-            font-size: 0.9em;
-            min-height: 1.5em; /* Espacio para el mensaje */
-            text-align: center;
-        }
+        .auth-container input::placeholder { color: rgba(236, 239, 241, 0.5); }
+        .auth-message { color: #FF4500; font-family: 'Inter', sans-serif; font-size: 0.9em; min-height: 1.5em; text-align: center; }
 
         /* Estilos para los botones generales de autenticación */
         .auth-button {
-            width: 100%;
-            padding: 12px 20px;
-            font-family: 'Press Start 2P', cursive;
-            font-size: 0.9em;
-            color: #eceff1;
-            text-shadow: 2px 2px 0px rgba(0, 0, 0, 0.7);
-            text-transform: uppercase;
-            background-color: #4CAF50; /* Verde vibrante */
-            border: 2px solid #2E8B57;
+            width: 100%; padding: 12px 20px; font-family: 'Press Start 2P', cursive;
+            font-size: 0.9em; color: #eceff1; text-shadow: 2px 2px 0px rgba(0, 0, 0, 0.7);
+            text-transform: uppercase; background-color: #4CAF50; border: 2px solid #2E8B57;
             border-radius: 6px;
-            box-shadow:
-                inset 0px 2px 0px 0px rgba(255, 255, 255, 0.15),
-                0px 4px 0px 0px #1E8449,
-                0px 6px 0px 0px #0F4F2E;
-            transition: all 0.1s ease-out;
-            cursor: pointer;
+            box-shadow: inset 0px 2px 0px 0px rgba(255, 255, 255, 0.15), 0px 4px 0px 0px #1E8449, 0px 6px 0px 0px #0F4F2E;
+            transition: all 0.1s ease-out; cursor: pointer;
         }
-
         .auth-button.google-button {
-            background-color: #DD4B39; /* Rojo Google */
-            border: 2px solid #A23223;
-            box-shadow:
-                inset 0px 2px 0px 0px rgba(255, 255, 255, 0.15),
-                0px 4px 0px 0px #8B2C1F,
-                0px 6px 0px 0px #6A1E14;
+            background-color: #DD4B39; border: 2px solid #A23223;
+            box-shadow: inset 0px 2px 0px 0px rgba(255, 255, 255, 0.15), 0px 4px 0px 0px #8B2C1F, 0px 6px 0px 0px #6A1E14;
         }
-
         .auth-button:hover {
             transform: translateY(-2px);
-            box-shadow:
-                inset 0px 2px 0px 0px rgba(255, 255, 255, 0.25),
-                0px 6px 0px 0px #1E8449,
-                0px 8px 0px 0px #0F4F2E;
+            box-shadow: inset 0px 2px 0px 0px rgba(255, 255, 255, 0.25), 0px 6px 0px 0px #1E8449, 0px 8px 0px 0px #0F4F2E;
         }
-
         .auth-button.google-button:hover {
-            box-shadow:
-                inset 0px 2px 0px 0px rgba(255, 255, 255, 0.25),
-                0px 6px 0px 0px #8B2C1F,
-                0px 8px 0px 0px #6A1E14;
+            box-shadow: inset 0px 2px 0px 0px rgba(255, 255, 255, 0.25), 0px 6px 0px 0px #8B2C1F, 0px 8px 0px 0px #6A1E14;
         }
-
         .auth-button:active {
             transform: translateY(2px);
-            box-shadow:
-                inset 0px 1px 0px 0px rgba(255, 255, 255, 0.1),
-                0px 2px 0px 0px #1E8449,
-                0px 3px 0px 0px #0F4F2E;
+            box-shadow: inset 0px 1px 0px 0px rgba(255, 255, 255, 0.1), 0px 2px 0px 0px #1E8449, 0px 3px 0px 0px #0F4F2E;
         }
-
         .auth-button.google-button:active {
-            box-shadow:
-                inset 0px 1px 0px 0px rgba(255, 255, 255, 0.1),
-                0px 2px 0px 0px #8B2C1F,
-                0px 3px 0px 0px #6A1E14;
+            box-shadow: inset 0px 1px 0px 0px rgba(255, 255, 255, 0.1), 0px 2px 0px 0px #8B2C1F, 0px 3px 0px 0px #6A1E14;
         }
-
-        .auth-button:focus {
-            outline: none;
-        }
-
-        /* Alineación del botón de volver al menú de autenticación */
-        #backToMenuAuthButton {
-            margin-top: 20px;
-        }
-
-        /* Estilos específicos para los contenedores de elección y formularios */
-        .auth-screen-content {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            width: 100%;
-            gap: 15px;
-        }
+        .auth-button:focus { outline: none; }
+        #backToMenuAuthButton { margin-top: 20px; }
+        .auth-screen-content { display: flex; flex-direction: column; align-items: center; width: 100%; gap: 15px; }
 
         /* Estilo para el mensaje de autoplay de música */
         #musicAutoPlayMessage {
-            position: fixed;
-            bottom: 60px; /* Ajusta la posición en relación al botón de música */
-            left: 20px;
-            background-color: rgba(255, 255, 0, 0.8);
-            color: #333;
-            padding: 8px 15px;
-            border-radius: 5px;
-            font-family: 'Inter', sans-serif;
-            font-size: 0.8em;
-            z-index: 100;
-            animation: fadeOut 5s forwards; /* Animación para desvanecerse */
+            position: fixed; bottom: 60px; left: 20px;
+            background-color: rgba(255, 255, 0, 0.8); color: #333;
+            padding: 8px 15px; border-radius: 5px;
+            font-family: 'Inter', sans-serif; font-size: 0.8em; z-index: 100;
+            animation: fadeOut 5s forwards;
+        }
+        @keyframes fadeOut { 0% { opacity: 1; } 80% { opacity: 1; } 100% { opacity: 0; display: none; } }
+
+        /* Estilos para los Canvas del juego (tanto single player como multiplayer) */
+        .game-canvas {
+            border: 2px solid #5A2D0D;
+            background-color: #1a1a1a;
+            image-rendering: pixelated;
+            width: 100%; /* Ajusta al ancho del contenedor padre (100vw) */
+            height: 100%; /* Ajusta a la altura del contenedor padre (100vh) */
+            display: block; /* Elimina espacio extra que algunos navegadores añaden al canvas */
         }
 
-        @keyframes fadeOut {
-            0% { opacity: 1; }
-            80% { opacity: 1; }
-            100% { opacity: 0; display: none; }
+        /* Contenedores para multijugador y selección de modo */
+        .multiplayer-container, .multiplayer-mode-selection-container {
+            /* Hereda de game-view-container para ocupar toda la pantalla */
+            border: 5px solid #8B4513; border-radius: 8px; box-shadow: 10px 10px 0px rgba(0, 0, 0, 0.5);
+            padding: 20px; box-sizing: border-box;
+            background-color: #2a2a2a; /* Fondo consistente */
+            display: flex; flex-direction: column; align-items: center; justify-content: flex-start; /* Alinea arriba el contenido */
+            gap: 15px; /* Espacio entre elementos */
         }
+        .multiplayer-header, .multiplayer-selection-header {
+            font-size: 2em; margin-bottom: 10px; color: #FFD700; text-align: center;
+        }
+        .multiplayer-section { width: 100%; display: flex; flex-direction: column; align-items: center; gap: 15px; margin-bottom: 20px; }
+        .multiplayer-input {
+            width: calc(100% - 20px); padding: 10px; border: 2px solid #5A2D0D;
+            background-color: #3f3f3f; color: #eceff1; font-family: 'Inter', sans-serif;
+            font-size: 1em; border-radius: 4px; box-sizing: border-box; text-shadow: none;
+            text-transform: uppercase; text-align: center;
+        }
+        .multiplayer-input::placeholder { color: rgba(236, 239, 241, 0.5); }
+        .multiplayer-button {
+            width: 100%; padding: 12px 20px; font-family: 'Press Start 2P', cursive;
+            font-size: 0.9em; color: #eceff1; text-shadow: 2px 2px 0px rgba(0, 0, 0, 0.7);
+            text-transform: uppercase; background-color: #4CAF50; border: 2px solid #2E8B57;
+            border-radius: 6px;
+            box-shadow: inset 0px 2px 0px 0px rgba(255, 255, 255, 0.15), 0px 4px 0px 0px #1E8449, 0px 6px 0px 0px #0F4F2E;
+            transition: all 0.1s ease-out; cursor: pointer;
+        }
+        .multiplayer-button:hover { transform: translateY(-2px); box-shadow: inset 0px 2px 0px 0px rgba(255, 255, 255, 0.25), 0px 6px 0px 0px #1E8449, 0px 8px 0px 0px #0F4F2E; }
+        .multiplayer-button:active { transform: translateY(2px); box-shadow: inset 0px 1px 0px 0px rgba(255, 255, 255, 0.1), 0px 2px 0px 0px #1E8449, 0px 3px 0px 0px #0F4F2E; }
+        .multiplayer-button.red-button {
+            background-color: #FF4500; border: 2px solid #B22222;
+            box-shadow: inset 0px 2px 0px 0px rgba(255, 255, 0, 0.15), 0px 4px 0px 0px #CD5C5C;
+        }
+        .multiplayer-button.red-button:hover { box-shadow: inset 0px 2px 0px 0px rgba(255, 255, 0, 0.25), 0px 6px 0px 0px #CD5C5C; }
+        .multiplayer-button.red-button:active { box-shadow: inset 0px 1px 0px 0px rgba(255, 255, 0, 0.1), 0px 1px 0px 0px #CD5C5C; }
+
+        .player-list { list-style: none; padding: 0; width: 100%; max-height: 150px; overflow-y: auto; border: 2px solid #5A2D0D; border-radius: 4px; background-color: rgba(0, 0, 0, 0.3); }
+        .player-item { padding: 8px 10px; border-bottom: 1px solid #3f3f3f; display: flex; align-items: center; font-size: 0.9em; }
+        .player-item:last-child { border-bottom: none; }
+        .player-status-dot { display: inline-block; width: 8px; height: 8px; background-color: #4CAF50; border-radius: 50%; margin-right: 8px; }
+        .multiplayer-message { color: #FFD700; font-family: 'Inter', sans-serif; font-size: 0.9em; min-height: 1.5em; text-align: center; margin-top: 10px; }
+        .multiplayer-room-info { text-align: center; margin-bottom: 20px; font-size: 1.1em; }
+
+        .mode-options-grid {
+            display: flex; flex-direction: row; justify-content: center; align-items: flex-start;
+            gap: 40px; flex-wrap: wrap;
+        }
+        .mode-option-card {
+            display: flex; flex-direction: column; align-items: center; gap: 15px;
+            background-color: #3a3a3a; border: 3px solid #8B4513; border-radius: 8px;
+            padding: 20px; box-shadow: 6px 6px 0px rgba(0, 0, 0, 0.5);
+            min-width: 250px; max-width: 300px; text-align: center;
+        }
+        .mode-image {
+            width: 180px; height: 180px; object-fit: contain; image-rendering: pixelated;
+            border: 2px solid #5A2D0D; border-radius: 4px; background-color: #1a1a1a; padding: 5px;
+        }
+        .pixel-button.large-mode-button { width: 100%; padding: 15px 25px; font-size: 1.1em; }
+
+        /* Contenedor para el mapa de historia SINGLE PLAYER */
+        .single-player-story-map-container {
+            /* Hereda de .game-view-container para ocupar toda la pantalla */
+            background-color: #2a2a2a;
+            /* Eliminados los bordes y sombras para que el canvas ocupe el 100% de la vista */
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            /* Estos márgenes son para los elementos internos, no para el contenedor principal que ya es 100% */
+        }
+        /* Eliminar estilos de header e imagen, ya que ahora será un canvas */
+        .single-player-story-map-header, .single-player-story-map-image {
+            display: none;
+        }
+
+
+        /* Contenedor para los logros */
+        .achievements-container {
+            position: relative; width: 90%; max-width: 800px;
+            height: 70vh; max-height: 600px;
+            background-color: #2a2a2a; border: 5px solid #8B4513; border-radius: 8px;
+            box-shadow: 10px 10px 0px rgba(0, 0, 0, 0.5);
+            display: flex; flex-direction: column; align-items: center;
+            padding: 20px; box-sizing: border-box; gap: 20px;
+        }
+        .achievements-header { font-size: 2em; margin-bottom: 10px; text-align: center; color: #FFD700; }
+        .achievements-grid {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 20px; width: 100%; flex-grow: 1; overflow-y: auto; padding: 10px;
+            box-sizing: border-box; background-color: rgba(0, 0, 0, 0.5); border-radius: 5px;
+        }
+        .achievement-card {
+            background-color: #3f3f3f; border: 2px solid #5A2D0D; border-radius: 4px;
+            padding: 10px; display: flex; flex-direction: column; align-items: center;
+            gap: 5px; text-align: center; box-shadow: 3px 3px 0px rgba(0, 0, 0, 0.5);
+            cursor: pointer; transition: transform 0.1s ease-out;
+        }
+        .achievement-card.completed { background-color: #2e4d2e; border-color: #4CAF50; opacity: 0.7; }
+        .achievement-card:hover { transform: translateY(-2px); }
+        .achievement-card:active { transform: translateY(1px); }
+        .achievement-icon { width: 80px; height: 80px; object-fit: contain; image-rendering: pixelated; }
+        .achievement-icon.mythical { border: 2px solid #FFD700; box-shadow: 0px 0px 8px #FFD700; }
+        .achievement-name { font-size: 0.8em; color: #fff; }
+        .achievement-description { font-family: 'Inter', sans-serif; font-size: 0.7em; color: #ccc; }
+        .achievement-status { font-size: 0.7em; color: #FF4500; font-weight: bold; margin-top: 5px; }
+        .achievement-status.completed { color: #4CAF50; }
+
+        /* Estilos para el botón de pausa (hamburguesa) */
+        #pauseMenuButton {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background-color: rgba(63, 63, 63, 0.7);
+            border: 2px solid #8B4513;
+            border-radius: 8px;
+            color: #eceff1;
+            font-size: 2em; /* Tamaño de la hamburguesa */
+            width: 50px; /* Ancho para el icono */
+            height: 50px; /* Alto para el icono */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            z-index: 1001; /* Por encima de todo */
+            box-shadow: 0px 4px 0px 0px #5A2D0D;
+            transition: all 0.1s ease-out;
+        }
+        #pauseMenuButton:hover { transform: translateY(-2px); box-shadow: 0px 6px 0px 0px #5A2D0D; }
+        #pauseMenuButton:active { transform: translateY(2px); box-shadow: 0px 1px 0px 0px #5A2D0D; }
+        #pauseMenuButton .hamburger-icon {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-around;
+            width: 70%;
+            height: 70%;
+        }
+        #pauseMenuButton .hamburger-icon span {
+            display: block;
+            width: 100%;
+            height: 4px;
+            background-color: #eceff1;
+            border-radius: 2px;
+        }
+
+        /* Menú de pausa overlay */
+        .pause-menu-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background-color: rgba(0, 0, 0, 0.8); /* Fondo semi-transparente */
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 1002; /* Por encima del botón de pausa */
+        }
+        .pause-menu-content {
+            background-color: #2a2a2a;
+            border: 5px solid #8B4513;
+            border-radius: 8px;
+            box-shadow: 10px 10px 0px rgba(0, 0, 0, 0.5);
+            padding: 40px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 25px;
+            font-family: 'Press Start 2P', cursive;
+            color: #eceff1;
+        }
+        .pause-menu-content button {
+            /* Reutilizar estilos de pixel-button */
+            appearance: none; -webkit-appearance: none; -moz-appearance: none;
+            background: none; border: none;
+            padding: 15px 35px;
+            cursor: pointer; text-align: center; box-sizing: border-box;
+            font-family: 'Press Start 2P', cursive;
+            font-size: 1.2em;
+            color: #eceff1;
+            text-shadow: 2px 2px 0px rgba(0, 0, 0, 0.7);
+            text-transform: uppercase;
+            background-color: #3f3f3f;
+            border: 2px solid #8B4513;
+            border-radius: 6px;
+            box-shadow: inset 0px 2px 0px 0px rgba(255, 255, 255, 0.15), 0px 4px 0px 0px #5A2D0D, 0px 6px 0px 0px #3F1D08;
+            transition: all 0.1s ease-out;
+            user-select: none; -webkit-user-select: none; -moz-user-select: none; -ms-user-select: none;
+            min-width: 250px;
+        }
+        .pause-menu-content button:hover { transform: translateY(-2px); box-shadow: inset 0px 2px 0px 0px rgba(255, 255, 255, 0.25), 0px 6px 0px 0px #5A2D0D, 0px 8px 0px 0px #3F1D08; }
+        .pause-menu-content button:active { transform: translateY(2px); box-shadow: inset 0px 1px 0px 0px rgba(255, 255, 255, 0.1), 0px 2px 0px 0px #5A2D0D, 0px 3px 0px 0px #3F1D08; }
+
+
+        /* Ocultar elementos específicos en la vista de juego para una experiencia limpia */
+        /* Estas reglas aseguran que solo el canvas y el botón de pausa se vean en el juego activo */
+        #multiplayerContainer.game-active > *:not(.game-canvas):not(#pauseMenuButton),
+        #singlePlayerStoryMapContainer.game-active > *:not(.game-canvas):not(#pauseMenuButton) {
+            display: none !important;
+        }
+        /* Asegurar que el botón de pausa se muestre solo cuando el juego está activo */
+        #pauseMenuButton.hidden-during-game {
+            display: none !important;
+        }
+
+
+        /* Estilos para los controles de flecha en móvil */
+        .mobile-controls {
+            position: fixed;
+            bottom: 20px; /* Ajustado para estar en la parte inferior */
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 1001; /* Asegura que esté por encima de todo */
+            display: flex;
+            gap: 20px; /* Espacio entre los botones */
+            /* Se controla la visibilidad con JavaScript */
+        }
+
+        .mobile-arrow-button {
+            background-color: rgba(63, 63, 63, 0.7); /* Fondo semi-transparente */
+            border: 2px solid #8B4513;
+            border-radius: 8px;
+            color: #eceff1;
+            font-family: 'Press Start 2P', cursive;
+            font-size: 1.8em; /* Más grande para el toque */
+            padding: 15px 25px;
+            cursor: pointer;
+            user-select: none;
+            transition: background-color 0.1s ease-out, transform 0.1s ease-out;
+            box-shadow: 0px 4px 0px 0px #5A2D0D;
+        }
+
+        .mobile-arrow-button:active {
+            transform: translateY(2px);
+            box-shadow: 0px 1px 0px 0px #5A2D0D;
+        }
+
+        /* Ocultar en pantallas más grandes (escritorio) */
+        @media (min-width: 768px) {
+            .mobile-controls {
+                display: none !important;
+            }
+        }
+
+        /* Estilos para la ventana modal de confirmación personalizada */
+        .custom-modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background-color: rgba(0, 0, 0, 0.7);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000; /* Más alto que otros elementos del juego */
+        }
+
+        .custom-modal-content {
+            background-color: #2a2a2a;
+            border: 5px solid #8B4513;
+            border-radius: 8px;
+            box-shadow: 10px 10px 0px rgba(0, 0, 0, 0.5);
+            padding: 30px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+            font-family: 'Press Start 2P', cursive;
+            color: #eceff1;
+            text-align: center;
+            max-width: 90%;
+        }
+
+        .custom-modal-content p {
+            font-size: 1.1em;
+            margin-bottom: 10px;
+        }
+
+        .custom-modal-buttons {
+            display: flex;
+            gap: 15px;
+        }
+
+        .custom-modal-buttons .pixel-button {
+            padding: 10px 20px;
+            font-size: 0.9em;
+            min-width: 100px;
+        }
+
+        .custom-modal-buttons .confirm-yes {
+            background-color: #4CAF50; /* Verde para "Sí" */
+            border-color: #2E8B57;
+            box-shadow: inset 0px 2px 0px 0px rgba(255, 255, 255, 0.15), 0px 4px 0px 0px #1E8449, 0px 6px 0px 0px #0F4F2E;
+        }
+        .custom-modal-buttons .confirm-yes:hover {
+            box-shadow: inset 0px 2px 0px 0px rgba(255, 255, 255, 0.25), 0px 6px 0px 0px #1E8449, 0px 8px 0px 0px #0F4F2E;
+        }
+        .custom-modal-buttons .confirm-yes:active {
+            box-shadow: inset 0px 1px 0px 0px rgba(255, 255, 255, 0.1), 0px 2px 0px 0px #1E8449, 0px 3px 0px 0px #0F4F2E;
+        }
+
+        .custom-modal-buttons .confirm-no {
+            background-color: #FF4500; /* Naranja rojizo para "No" */
+            border-color: #B22222;
+            box-shadow: inset 0px 2px 0px 0px rgba(255, 255, 0, 0.15), 0px 4px 0px 0px #CD5C5C;
+        }
+        .custom-modal-buttons .confirm-no:hover {
+            box-shadow: inset 0px 2px 0px 0px rgba(255, 255, 0, 0.25), 0px 6px 0px 0px #CD5C5C;
+        }
+        .custom-modal-buttons .confirm-no:active {
+            box-shadow: inset 0px 1px 0px 0px rgba(255, 255, 0, 0.1), 0px 1px 0px 0px #CD5C5C;
+        }
+
     </style>
 </head>
 <body>
@@ -588,45 +674,51 @@
 
         <div class="character-row-container">
             <!-- Se han quitado las imágenes de los personajes según lo solicitado -->
-            <!-- <img src="" alt="Esqueleto Izquierda" class="character-icon skeleton-icon"> -->
-            <!-- <img src="" alt="Personaje Central" class="character-icon main-character-icon"> -->
-            <!-- <img src="" alt="Esqueleto Derecha" class="character-icon skeleton-icon"> -->
+            <!--  -->
+            <!--  -->
+            <!--  -->
         </div>
 
         <div class="game-menu">
             <button id="playButton" class="pixel-button">
                 JUGAR
             </button>
-
-            <div class="primary-buttons-group">
-                <button id="historiaButton" class="pixel-button">
-                    Historia
-                </button>
-                <button id="batallaButton" class="pixel-button">
-                    Batalla
-                </button>
-                <button id="arenaButton" class="pixel-button">
-                    Arena
-                </button>
-            </div>
+            <button id="multiplayerButton" class="pixel-button">
+                Multijugador
+            </button>
         </div>
 
-        <button id="tiendaButton" aria-label="Tienda">
+        <button id="tiendaButton" aria-label="Tienda" class="corner-button">
             TIENDA
         </button>
 
-        <!-- Icono de Tienda Pixel Art -->
         <img src="https://png.pngtree.com/png-vector/20220828/ourmid/pngtree-pixel-art-shop-icon-design-vector-png-image_6125107.png" onerror="this.onerror=null;this.src='https://placehold.co/150x150/000000/FFFFFF?text=TIENDA';" alt="Icono de Tienda Pixel Art" class="shop-icon">
 
-        <button id="usernameButton" aria-label="Usuario">
+        <button id="logrosButton" aria-label="Logros" class="corner-button">
+            <img src="https://i.imgur.com/fr8O669.png" onerror="this.onerror=null;this.src='https://placehold.co/40x40/3f3f3f/FFFFFF?text=L';" alt="Logros Icono">
+            LOGROS
+        </button>
+
+        <button id="usernameButton" aria-label="Usuario" class="corner-button">
             USUARIO
         </button>
 
-        <!-- Icono de Usuario Pixel Art Transparente (SVG inline) - Revertido a la versión anterior -->
-        <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTUwIiBoZWlnaHQ9IjE1MCIgdmlld0JveD0iMCAwIDE2IDE2IiBmaWxsPSJub25lIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjxyZWN0IHg9IjYiIHk9IjIiIHdpZHRoPSI0IiBoZWlnaHQ9IjQiIGZpbGw9IiNlY2VmZjEiLz48cmVjdCB4PSI0IiB5PSI3IiB3aWR0aD0iOCIgaGVpZ2h0PSI1IiBmaWxsPSIjZWNlZmYxIi8+PC9zdmc+" onerror="this.onerror=null;this.src='https://placehold.co/150x150/000000/FFFFFF?text=USUARIO';" alt="Icono de Usuario Pixel Art Transparente" class="user-icon">
+        <svg class="user-icon-svg" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect x="6" y="2" width="4" height="4" fill="#eceff1"/>
+            <rect x="4" y="7" width="8" height="5" fill="#eceff1"/>
+        </svg>
+
+        <button id="upcomingButton" aria-label="Próximamente" class="corner-button">
+            <img src="https://i.imgur.com/73ede5.png" onerror="this.onerror=null;this.src='https://placehold.co/40x40/3f3f3f/FFFFFF?text=?'" alt="Próximamente Icono">
+            PRÓXIMAMENTE...
+        </button>
 
         <button id="musicToggleButton" aria-label="Toggle Music">
             MÚSICA ON
+        </button>
+
+        <button id="fullscreenButton" aria-label="Pantalla Completa">
+            PANTALLA COMPLETA
         </button>
 
         <audio id="background-music" loop autoplay>
@@ -635,12 +727,12 @@
         </audio>
     </div>
 
-    <div id="shopContainer" class="hidden">
+    <div id="shopContainer" class="hidden game-view-container">
         <div class="shop-header">TIENDA</div>
 
         <div class="items-grid">
             <div class="item-card">
-                <img src="https://i.redd.it/vywwv3ofzcia1.gif" onerror="this.onerror=null;this.src='https://placehold.co/60x60/3f3f3f/FFFFFF?text=Espada';" alt="Espada">
+                <img src="https://i.imgur.com/Pz1YOyJ.png" onerror="this.onerror=null;this.src='https://placehold.co/60x60/3f3f3f/FFFFFF?text=Espada';" alt="Espada">
                 <span class="item-name">Espada</span>
                 <span class="item-price">100 G</span>
                 <button class="buy-button" data-item="Espada">Comprar</button>
@@ -666,28 +758,28 @@
                 <span class="item-price">120 G</span>
                 <button class="buy-button" data-item="Hacha de Batalla">Comprar</button>
             </div>
+
+            <!-- Nueva arma: Guadaña con la imagen proporcionada y tamaño ajustado -->
+            <div class="item-card">
+                <img src="https://i.imgur.com/jtOFzqU.png" class="scythe-icon" onerror="this.onerror=null;this.src='https://placehold.co/120x120/3f3f3f/FFFFFF?text=Guadaña';" alt="Guadaña">
+                <span class="item-name">Guadaña</span>
+                <span class="item-price">150 G</span>
+                <button class="buy-button" data-item="Guadaña">Comprar</button>
+            </div>
         </div>
 
         <button id="backToMenuButton" class="back-button">Volver al Menú</button>
     </div>
 
     <!-- Contenedor principal para todas las pantallas de autenticación -->
-    <!-- Este contenedor inicialmente está oculto y se mostrará al hacer clic en USUARIO -->
-    <div id="authContainer" class="auth-container hidden">
-        <!-- Área para mostrar mensajes de estado (éxito, error) -->
+    <div id="authContainer" class="auth-container hidden game-view-container">
         <p id="authMessage" class="auth-message"></p>
-
-        <!-- Pantalla de elección inicial: REGISTRARSE o INICIAR SESIÓN -->
-        <!-- Esta es la primera pantalla que se muestra cuando el usuario no está logeado y pulsa 'USUARIO' -->
         <div id="authChoiceScreen" class="auth-screen-content hidden">
             <h2>BIENVENIDO</h2>
             <button id="showRegisterButton" class="auth-button">REGISTRARSE</button>
             <button id="showLoginButton" class="auth-button">INICIAR SESIÓN</button>
             <button id="backToMenuFromAuthChoices" class="back-button">VOLVER AL MENÚ</button>
         </div>
-
-        <!-- Pantalla de Registro: Nombre de usuario, Correo y Contraseña -->
-        <!-- Se muestra al pulsar 'REGISTRARSE' en la pantalla de elección -->
         <div id="registerScreen" class="auth-screen-content hidden">
             <h2>REGISTRARSE</h2>
             <input type="text" id="registerUsername" placeholder="Nombre de usuario (opcional)">
@@ -697,9 +789,6 @@
             <button id="registerGoogleButton" class="auth-button google-button">INICIAR CON GOOGLE</button>
             <button id="backToAuthChoicesFromRegister" class="back-button">VOLVER</button>
         </div>
-
-        <!-- Pantalla de Inicio de Sesión: Correo y Contraseña -->
-        <!-- Se muestra al pulsar 'INICIAR SESIÓN' en la pantalla de elección -->
         <div id="loginScreen" class="auth-screen-content hidden">
             <h2>INICIAR SESIÓN</h2>
             <input type="email" id="loginEmail" placeholder="Correo electrónico" required>
@@ -708,16 +797,142 @@
             <button id="loginGoogleButtonForm" class="auth-button google-button">INICIAR CON GOOGLE</button>
             <button id="backToAuthChoicesFromLogin" class="back-button">VOLVER</button>
         </div>
-
     </div>
+
+    <!-- Contenedor principal para el modo multijugador -->
+    <div id="multiplayerContainer" class="multiplayer-container hidden game-view-container">
+        <h2 class="multiplayer-header">MODO MULTIJUGADOR</h2>
+        <p id="multiplayerUserDisplay"></p>
+        <p id="multiplayerMessage"></p>
+
+        <!-- Lobby del multijugador -->
+        <div id="multiplayerLobby" class="multiplayer-section">
+            <button id="createRoomButton" class="multiplayer-button">
+                Crear Nueva Sala
+            </button>
+
+            <div class="mt-6 w-full flex flex-col items-center">
+                <input
+                    type="text"
+                    id="roomCodeInput"
+                    placeholder="Introduce el código de sala (6 dígitos)"
+                    class="multiplayer-input"
+                    maxlength="6"
+                />
+                <button id="joinRoomByCodeButton" class="multiplayer-button mt-3">
+                    Unirse a Sala por Código
+                </button>
+            </div>
+        </div>
+
+        <!-- Vista de la sala (cuando el jugador está dentro de una sala) -->
+        <div id="multiplayerRoomView" class="multiplayer-section hidden">
+            <h3 class="multiplayer-room-info">Sala: <span id="currentRoomCodeDisplay"></span></h3>
+            
+            <!-- Canvas para el mapa del juego -->
+            <canvas id="multiplayerGameCanvas" class="game-canvas"></canvas>
+
+            <div class="mb-6 mt-4 text-center">
+                <p class="text-xl font-bold mb-2">Estado del Juego:</p>
+                <p class="text-lg">Águilas Rescatadas: <span id="aguilasRescatadasDisplay">0</span></p>
+                <button id="rescueEagleButton" class="multiplayer-button mt-4 bg-purple-600 hover:bg-purple-700">
+                    Rescatar Águila
+                </button>
+            </div>
+
+            <div class="mb-6 w-full">
+                <p class="text-xl font-bold mb-2">Jugadores en la Sala:</p>
+                <ul id="playersList" class="player-list">
+                    <!-- Los jugadores se insertarán aquí dinámicamente -->
+                </ul>
+            </div>
+
+            <button id="leaveRoomButton" class="multiplayer-button red-button">
+                Salir de Sala
+            </button>
+        </div>
+
+        <!-- El botón de volver al menú principal para el modo multijugador (oculto en juego) -->
+        <button id="backToMainMenuFromMultiplayer" class="back-button game-back-button hidden">Volver al Menú</button>
+    </div>
+
+    <!-- Contenedor para la selección de modos de juego MULTIJUGADOR -->
+    <div id="multiplayerGameModeSelectionContainer" class="hidden game-view-container">
+        <h2 class="multiplayer-selection-header">Elige tu Aventura Multijugador</h2>
+        <div class="mode-options-grid">
+            <div class="mode-option-card">
+                <img src="https://i.imgur.com/Bb2QxyO.png" onerror="this.onerror=null;this.src='https://placehold.co/180x180/000000/FFFFFF?text=EXPLORAR';" alt="Icono de Exploración" class="mode-image">
+                <button id="exploreMapButton" class="pixel-button large-mode-button">Explorar Mapa (Historia)</button>
+            </div>
+            <div class="mode-option-card">
+                <img src="https://i.imgur.com/sot15xN.png" onerror="this.onerror=null;this.src='https://placehold.co/180x180/000000/FFFFFF?text=BATALLA';" alt="Icono de Batalla" class="mode-image">
+                <button id="battleModeButton" class="pixel-button large-mode-button">Batalla</button>
+            </div>
+        </div>
+        <button id="backToMainMenuFromMultiplayerModes" class="back-button">Volver al Menú</button>
+    </div>
+
+    <!-- Contenedor para el mapa de historia SINGLE PLAYER (NUEVO) -->
+    <div id="singlePlayerStoryMapContainer" class="hidden single-player-story-map-container game-view-container">
+        <!-- El canvas reemplazará el h2 y la imagen estática -->
+        <canvas id="singlePlayerGameCanvas" class="game-canvas"></canvas>
+        <!-- El botón de volver al menú principal para el modo historia (oculto en juego) -->
+        <button id="backToMainMenuFromSinglePlayerMap" class="back-button game-back-button hidden">Volver al Menú</button>
+    </div>
+
+    <!-- Contenedor para los logros -->
+    <div id="achievementsContainer" class="hidden achievements-container game-view-container">
+        <h2 class="achievements-header">LOGROS</h2>
+        <div class="achievements-grid" id="achievementsGrid">
+            <!-- Los logros se insertarán aquí dinámicamente -->
+        </div>
+        <button id="backToMainMenuFromAchievements" class="back-button">Volver al Menú</button>
+    </div>
+
+    <!-- Botón del menú de pausa (hamburguesa) - visible durante el juego -->
+    <button id="pauseMenuButton" class="hidden-during-game">
+        <div class="hamburger-icon">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+    </button>
+
+    <!-- Menú de pausa (overlay) -->
+    <div id="pauseMenuOverlay" class="pause-menu-overlay hidden">
+        <div class="pause-menu-content">
+            <button id="resumeGameButton">CONTINUAR JUEGO</button>
+            <button id="settingsButton">AJUSTES</button>
+            <button id="backToMainMenuFromPause">VOLVER AL MENÚ PRINCIPAL</button>
+        </div>
+    </div>
+
+
+    <!-- Controles de flecha para móvil (oculto por defecto en escritorio) -->
+    <div id="mobileControls" class="mobile-controls hidden">
+        <button id="mobileLeft" class="mobile-arrow-button">&lt;</button>
+        <button id="mobileRight" class="mobile-arrow-button">&gt;</button>
+    </div>
+
+    <!-- VENTANA MODAL DE CONFIRMACIÓN PERSONALIZADA -->
+    <div id="customConfirmModal" class="custom-modal-overlay hidden">
+        <div class="custom-modal-content">
+            <p id="customConfirmMessage">¿Estás seguro?</p>
+            <div class="custom-modal-buttons">
+                <button id="customConfirmYes" class="pixel-button confirm-yes">Sí</button>
+                <button id="customConfirmNo" class="pixel-button confirm-no">No</button>
+            </div>
+        </div>
+    </div>
+
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
         import { getAuth, signInAnonymously, signInWithCustomToken, createUserWithEmailAndPassword, signInWithEmailAndPassword, GoogleAuthProvider, signInWithPopup, signOut, updateProfile, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { getFirestore, doc, setDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
-        import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-analytics.js"; // Importar Analytics
+        import { getFirestore, doc, setDoc, updateDoc, collection, query, onSnapshot, deleteDoc, getDoc, where, getDocs } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-analytics.js";
 
-        // CONFIGURACIÓN DE FIREBASE ACTUALIZADA CON TUS VALORES REALES
+        // Firebase configuration (replace with your actual values)
         const firebaseConfig = {
             apiKey: "AIzaSyBVPNIsjeYqaGWiWngJRR-ZBGJ9JWI40yg",
             authDomain: "neonbeatsgame-c3c1d.firebaseapp.com",
@@ -730,72 +945,32 @@
 
         const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
 
-        // Inicializar Firebase
+        // Initialize Firebase
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
         const db = getFirestore(app);
-        const analytics = getAnalytics(app); // Inicializar Analytics
+        const analytics = getAnalytics(app);
 
         let currentUserId = null;
+        let currentUserDisplayName = 'JugadorAnónimo';
+        let currentRoomId = null;
+        let unsubscribeRoomListener = null;
+        let unsubscribeMapListener = null;
 
-        // Listener para los cambios de estado de autenticación de Firebase
-        onAuthStateChanged(auth, async (user) => {
-            if (user) {
-                currentUserId = user.uid;
-                console.log("Usuario autenticado:", user.email || "Anónimo", user.uid);
-
-                let displayUserName = 'USUARIO';
-                // Prioriza el displayName (nombre elegido al registrarse o por Google)
-                if (user.displayName) {
-                    displayUserName = user.displayName.toUpperCase();
-                } else if (user.email) {
-                    // Si no hay displayName, usa la parte del email antes del @
-                    displayUserName = user.email.split('@')[0].toUpperCase();
-                }
-                document.getElementById('usernameButton').textContent = displayUserName;
-                document.getElementById('usernameButton').dataset.loggedIn = 'true';
-                document.getElementById('authMessage').textContent = `Bienvenido, ${displayUserName}.`;
-                showMainMenu();
-            } else {
-                currentUserId = null;
-                console.log("No hay usuario autenticado.");
-                document.getElementById('usernameButton').textContent = 'USUARIO';
-                document.getElementById('usernameButton').dataset.loggedIn = 'false';
-                document.getElementById('authMessage').textContent = '';
-
-                // Intenta iniciar sesión anónimamente si no hay un usuario logeado
-                if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
-                    try {
-                        await signInWithCustomToken(auth, __initial_auth_token);
-                        console.log("Sesión iniciada con token personalizado.");
-                    } catch (error) {
-                        console.error("Error al iniciar sesión con token personalizado:", error);
-                        try {
-                            await signInAnonymously(auth);
-                            console.log("Sesión iniciada anónimamente.");
-                        } catch (anonError) {
-                            console.error("Error al iniciar sesión anónimamente:", anonError);
-                        }
-                    }
-                } else {
-                    try {
-                        await signInAnonymously(auth);
-                        console.log("Sesión iniciada anónimamente (sin token inicial).");
-                    } catch (anonError) {
-                        console.error("Error al iniciar sesión anónimamente:", anonError);
-                    }
-                }
-            }
-        });
-
+        // Main DOM element references
         const mainMenuContainer = document.getElementById('mainMenuContainer');
         const shopContainer = document.getElementById('shopContainer');
         const authContainer = document.getElementById('authContainer');
+        const multiplayerContainer = document.getElementById('multiplayerContainer');
+        const multiplayerGameModeSelectionContainer = document.getElementById('multiplayerGameModeSelectionContainer');
+        const singlePlayerStoryMapContainer = document.getElementById('singlePlayerStoryMapContainer');
+        const achievementsContainer = document.getElementById('achievementsContainer');
+        const pauseMenuOverlay = document.getElementById('pauseMenuOverlay');
+        const pauseMenuButton = document.getElementById('pauseMenuButton');
 
         const authChoiceScreen = document.getElementById('authChoiceScreen');
         const registerScreen = document.getElementById('registerScreen');
         const loginScreen = document.getElementById('loginScreen');
-
         const registerUsernameInput = document.getElementById('registerUsername');
         const registerEmailInput = document.getElementById('registerEmail');
         const registerPasswordInput = document.getElementById('registerPassword');
@@ -803,19 +978,263 @@
         const loginPasswordInput = document.getElementById('loginPassword');
         const authMessage = document.getElementById('authMessage');
 
+        // Multiplayer UI elements
+        const multiplayerUserDisplay = document.getElementById('multiplayerUserDisplay');
+        const multiplayerMessage = document.getElementById('multiplayerMessage');
+        const multiplayerLobby = document.getElementById('multiplayerLobby');
+        const multiplayerRoomView = document.getElementById('multiplayerRoomView');
+        const roomCodeInput = document.getElementById('roomCodeInput');
+        const currentRoomCodeDisplay = document.getElementById('currentRoomCodeDisplay');
+        const aguilasRescatadasDisplay = document.getElementById('aguilasRescatadasDisplay');
+        const playersList = document.getElementById('playersList');
+
+        // Canvas elements
+        const multiplayerGameCanvas = document.getElementById('multiplayerGameCanvas');
+        const singlePlayerGameCanvas = document.getElementById('singlePlayerGameCanvas');
+
+        let activeGameCanvas = null; // Currently active canvas
+        let activeCtx = null;       // 2D context of the active canvas
+        let activePlayersData = {}; // Player data for the currently active game mode (multiplayer from Firestore, single player local)
+        let activeGameMode = null;  // 'multiplayer' or 'singlePlayer'
+        let gameLoopInterval = null; // To control pausing/resuming game loop
+        let playerState = 'idle'; // Added for player animation state
+
+
+        // Button references
+        const achievementsGrid = document.getElementById('achievementsGrid');
+        const backToMainMenuFromAchievementsButton = document.getElementById('backToMainMenuFromAchievements');
+        const backToMainMenuFromMultiplayerModesButton = document.getElementById('backToMainMenuFromMultiplayerModes');
+        const backToMainMenuFromSinglePlayerMapButton = document.getElementById('backToMainMenuFromSinglePlayerMap');
+
+        // Achievement data - Updated icons for consistency
+        const achievementsData = [
+            { id: 'collect100G', name: 'Riqueza Inicial', description: 'Recolecta 100G (Monedas)', icon: 'https://i.imgur.com/fr8O669.png', type: 'normal', completed: false },
+            { id: 'getAllWeapons', name: 'Arsenal Completo', description: 'Obtén todas las armas', icon: 'https://i.imgur.com/fr8O669.png', type: 'normal', completed: false },
+            { id: 'kill1Soldier', name: 'Primer Caído', description: 'Mata a 1 soldado', icon: 'https://i.imgur.com/fr8O669.png', type: 'normal', completed: false },
+            { id: 'kill10Soldiers', name: 'Carnicería Menor', description: 'Mata 10 soldados', icon: 'https://i.imgur.com/fr8O669.png', type: 'normal', completed: false },
+            { id: 'defeat1Boss', name: 'Verdugo de Jefes', description: 'Derrota un jefe', icon: 'https://i.imgur.com/fr8O669.png', type: 'normal', completed: false },
+            { id: 'kill100Enemies', name: 'Matanza Masiva', description: 'Mata 100 enemigos', icon: 'https://i.imgur.com/Au9wUee.png', type: 'mythical', completed: false },
+            { id: 'get1000G', name: 'Fortuna Infinita', description: 'Consigue 1000 monedas', icon: 'https://i.imgur.com/Au9wUee.png', type: 'mythical', completed: false }
+        ];
+
+        // --- Game Map Variables ---
+        const MAP_IMAGE_URLS = [
+            'https://i.imgur.com/4LjiCOk.png', // Reemplazar con URL pública de Reccorido0.jpg
+            'https://i.imgur.com/K7lRWC4.png', // Reemplazar con URL pública de recorrido1.jpg
+            'https://i.imgur.com/svuBq5d.png', // Reemplazar con URL pública de recorrido2.jpg
+            'https://i.imgur.com/ghglKWv.png'  // Reemplazar con URL pública de la segunda recorrido2.jpg o una nueva
+        ];
+        let mapImages = [];
+        let mapImagesLoadedCount = 0;
+        let allMapImagesLoaded = false;
+
+        const SOURCE_MAP_WIDTH = 760;
+        const SOURCE_MAP_HEIGHT = 500;
+
+        let renderedMapSegmentWidth = 0;
+        let renderedMapSegmentHeight = 0;
+        let totalRenderedMapWidth = 0;
+
+
+        // Load all map images
+        MAP_IMAGE_URLS.forEach((url, index) => {
+            let img = new Image();
+            img.src = url;
+            img.onload = () => {
+                mapImages[index] = img;
+                mapImagesLoadedCount++;
+                if (mapImagesLoadedCount === MAP_IMAGE_URLS.length) {
+                    allMapImagesLoaded = true;
+                    console.log("Todos los mapas cargados.");
+                    if (activeGameCanvas && !activeGameCanvas.classList.contains('hidden')) {
+                         resizeCanvas();
+                         requestAnimationFrame(drawGame);
+                    }
+                }
+            };
+            img.onerror = (e) => {
+                console.error(`Error al cargar la imagen del mapa ${url}:`, e);
+                let fallbackUrl = `https://placehold.co/${SOURCE_MAP_WIDTH}x${SOURCE_MAP_HEIGHT}/FF0000/FFFFFF?text=ERROR+DE+CARGA+MAPA+${index + 1}`;
+                let placeholderImg = new Image();
+                placeholderImg.src = fallbackUrl;
+                placeholderImg.onload = () => {
+                    mapImages[index] = placeholderImg;
+                    mapImagesLoadedCount++;
+                    if (mapImagesLoadedCount === MAP_IMAGE_URLS.length) {
+                        allMapImagesLoaded = true;
+                        console.log("Todos los mapas cargados (con fallbacks).");
+                        if (activeGameCanvas && !activeGameCanvas.classList.contains('hidden')) {
+                            resizeCanvas();
+                            requestAnimationFrame(drawGame);
+                        }
+                    }
+                };
+                placeholderImg.onerror = (e2) => console.error("Fallo al cargar placeholder del mapa:", e2);
+            };
+        });
+
+        // Player animation assets
+        const IDLE_SPRITE_URL = 'https://i.imgur.com/OzBdb5p.jpeg'; // Sprite para estado de reposo
+        const WALK_SPRITE_URL_FRAME1 = 'https://i.imgur.com/jLdI95q.jpeg'; // Primer frame de caminar
+        const WALK_SPRITE_URL_FRAME2 = 'https://i.imgur.com/XIr1b3f.jpeg'; // Segundo frame de caminar
+
+        let idleSpriteImage = new Image();
+        idleSpriteImage.src = IDLE_SPRITE_URL;
+        let idleSpriteLoaded = false;
+        idleSpriteImage.onload = () => {
+            idleSpriteLoaded = true;
+            console.log("Sprite de reposo del jugador cargado.");
+        };
+        idleSpriteImage.onerror = (e) => {
+            console.error("Error al cargar el sprite de reposo del jugador:", e);
+            idleSpriteLoaded = false;
+        };
+
+        let walkSpriteImageFrame1 = new Image();
+        walkSpriteImageFrame1.src = WALK_SPRITE_URL_FRAME1;
+        let walkSpriteFrame1Loaded = false;
+        walkSpriteImageFrame1.onload = () => {
+            walkSpriteFrame1Loaded = true;
+            console.log("Primer frame de caminar del jugador cargado.");
+        };
+        walkSpriteImageFrame1.onerror = (e) => {
+            console.error("Error al cargar el primer frame de caminar del jugador:", e);
+            walkSpriteFrame1Loaded = false;
+        };
+
+        let walkSpriteImageFrame2 = new Image();
+        walkSpriteImageFrame2.src = WALK_SPRITE_URL_FRAME2;
+        let walkSpriteFrame2Loaded = false;
+        walkSpriteImageFrame2.onload = () => {
+            walkSpriteFrame2Loaded = true;
+            console.log("Segundo frame de caminar del jugador cargado.");
+        };
+        walkSpriteImageFrame2.onerror = (e) => {
+            console.error("Error al cargar el segundo frame de caminar del jugador:", e);
+            walkSpriteFrame2Loaded = false;
+        };
+
+        // Animation state for walking
+        let currentWalkFrame = 0; // 0 for frame1, 1 for frame2
+        const FRAME_UPDATE_INTERVAL = 150; // Milliseconds to change frame
+        let lastFrameTime = 0;
+
+
+        // Listen for window resize and fullscreen events
+        window.addEventListener('resize', resizeCanvas);
+        document.addEventListener('fullscreenchange', resizeCanvas);
+
+
+        function resizeCanvas() {
+            if (activeGameCanvas) {
+                activeGameCanvas.width = window.innerWidth;
+                activeGameCanvas.height = window.innerHeight;
+
+                // Calculate rendered map segment dimensions based on canvas height, maintaining aspect ratio
+                renderedMapSegmentHeight = activeGameCanvas.height;
+                renderedMapSegmentWidth = (renderedMapSegmentHeight / SOURCE_MAP_HEIGHT) * SOURCE_MAP_WIDTH;
+                totalRenderedMapWidth = renderedMapSegmentWidth * MAP_IMAGE_URLS.length;
+
+                // Adjust player position if they are out of bounds after resize
+                // (player.x, player.y are percentages 0-100 of total virtual map)
+                if (activePlayersData[currentUserId]) {
+                    activePlayersData[currentUserId].x = Math.max(0, Math.min(100, activePlayersData[currentUserId].x));
+                    activePlayersData[currentUserId].y = Math.max(0, Math.min(100, activePlayersData[currentUserId].y));
+                }
+            }
+        }
+
+
+        const PLAYER_SIZE = 96; // Tamaño del jugador a 96px (como se solicitó)
+        const PLAYER_SPEED = 10; // Pixels per frame, aumentado para que el movimiento sea más notorio
+        const playerColors = [
+            '#FF0000', '#0000FF', '#00FF00', '#FFFF00', '#FF00FF',
+            '#00FFFF', '#FFA500', '#800080', '#008000', '#FFC0CB'
+        ];
+
+        let keysPressed = {};
+        document.addEventListener('keydown', (e) => {
+            keysPressed[e.key.toLowerCase()] = true;
+        });
+        document.addEventListener('keyup', (e) => {
+            keysPressed[e.key.toLowerCase()] = false;
+        });
+
+        // Mobile detection function
+        function isMobile() {
+            return /Mobi|Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+        }
+
+        // --- End Game Map Variables ---
+
+
+        // Function to hide all screens
         function hideAllScreens() {
             mainMenuContainer.classList.add('hidden');
             shopContainer.classList.add('hidden');
             authContainer.classList.add('hidden');
+            multiplayerContainer.classList.add('hidden');
+            multiplayerGameModeSelectionContainer.classList.add('hidden');
+            singlePlayerStoryMapContainer.classList.add('hidden');
+            achievementsContainer.classList.add('hidden');
+            pauseMenuOverlay.classList.add('hidden'); // Ensure pause menu is hidden
+            pauseMenuButton.classList.add('hidden-during-game'); // Ensure pause button is hidden
+            document.getElementById('customConfirmModal').classList.add('hidden'); // Hide custom modal
+
             authChoiceScreen.classList.add('hidden');
             registerScreen.classList.add('hidden');
             loginScreen.classList.add('hidden');
             authMessage.textContent = '';
+            multiplayerMessage.textContent = '';
+
+            // Hide all corner buttons and music/fullscreen buttons when not in main menu
+            document.getElementById('tiendaButton').classList.add('hidden');
+            document.getElementById('usernameButton').classList.add('hidden');
+            document.getElementById('logrosButton').classList.add('hidden');
+            document.getElementById('upcomingButton').classList.add('hidden');
+            document.getElementById('musicToggleButton').classList.add('hidden');
+            document.getElementById('fullscreenButton').classList.add('hidden');
+            document.getElementById('mobileControls').classList.add('hidden'); // Hide mobile controls
+            
+            // Explicitly hide all relevant UI elements in multiplayer container that are not the game canvas
+            multiplayerContainer.querySelectorAll('.multiplayer-section, .multiplayer-header, #multiplayerUserDisplay, #multiplayerMessage, #currentRoomCodeDisplay, #aguilasRescatadasDisplay, #rescueEagleButton, #playersList, #leaveRoomButton').forEach(el => {
+                el.style.display = 'none';
+            });
+            // Ensure any old back buttons from game are explicitly hidden
+            document.getElementById('backToMainMenuFromMultiplayer').classList.add('hidden');
+            document.getElementById('backToMainMenuFromSinglePlayerMap').classList.add('hidden');
         }
 
+        // Functions to show specific screens
         function showMainMenu() {
             hideAllScreens();
             mainMenuContainer.classList.remove('hidden');
+            
+            // Show main menu buttons
+            document.getElementById('tiendaButton').classList.remove('hidden');
+            document.getElementById('usernameButton').classList.remove('hidden');
+            document.getElementById('logrosButton').classList.remove('hidden');
+            document.getElementById('upcomingButton').classList.remove('hidden');
+            document.getElementById('musicToggleButton').classList.remove('hidden');
+            document.getElementById('fullscreenButton').classList.remove('hidden');
+
+            // Unsubscribe from room and map listeners when returning to main menu
+            if (unsubscribeRoomListener) {
+                unsubscribeRoomListener();
+                unsubscribeRoomListener = null;
+            }
+            if (unsubscribeMapListener) {
+                unsubscribeMapListener();
+                unsubscribeMapListener = null;
+            }
+            activeGameCanvas = null;
+            activeCtx = null;
+            activePlayersData = {};
+            activeGameMode = null;
+            clearInterval(gameLoopInterval); // Stop game loop when in main menu
+            playerState = 'idle'; // Reset player state to idle
+            currentWalkFrame = 0; // Reset frame for animation
+            lastFrameTime = 0; // Reset time for animation
         }
 
         function showShop() {
@@ -848,20 +1267,956 @@
             authMessage.textContent = '';
         }
 
+        // Function to show multiplayer lobby or room
+        async function showMultiplayerLobby() {
+            hideAllScreens();
+            multiplayerContainer.classList.remove('hidden');
+            multiplayerUserDisplay.textContent = `ID de Usuario: ${currentUserId}`;
+            multiplayerLobby.classList.remove('hidden');
+            multiplayerRoomView.classList.add('hidden'); // Always start in lobby
+            roomCodeInput.value = '';
+            multiplayerMessage.textContent = '';
+            
+            // Show only relevant lobby elements
+            multiplayerContainer.querySelector('.multiplayer-header').style.display = 'block';
+            multiplayerUserDisplay.style.display = 'block';
+            multiplayerMessage.style.display = 'block';
+            multiplayerLobby.style.display = 'flex'; // Restore flex for lobby buttons
+            document.getElementById('createRoomButton').style.display = 'block';
+            document.getElementById('roomCodeInput').style.display = 'block';
+            document.getElementById('joinRoomByCodeButton').style.display = 'block';
+            document.getElementById('backToMainMenuFromMultiplayer').classList.remove('hidden'); // Ensure back button is visible in lobby
+            document.getElementById('backToMainMenuFromMultiplayer').style.display = 'block'; // Ensure it's displayed as block
+
+            // Unsubscribe from listeners if returning to lobby
+            if (unsubscribeMapListener) {
+                unsubscribeMapListener();
+                unsubscribeMapListener = null;
+            }
+            if (unsubscribeRoomListener) {
+                 unsubscribeRoomListener();
+                 unsubscribeRoomListener = null;
+            }
+            activeGameCanvas = null;
+            activeCtx = null;
+            activePlayersData = {};
+            activeGameMode = null;
+            clearInterval(gameLoopInterval); // Stop game loop
+            playerState = 'idle'; // Reset player state to idle
+            currentWalkFrame = 0; // Reset frame for animation
+            lastFrameTime = 0; // Reset time for animation
+        }
+
+        function showMultiplayerGameModeSelection() {
+            hideAllScreens();
+            multiplayerGameModeSelectionContainer.classList.remove('hidden');
+            // Show its back button
+            document.getElementById('backToMainMenuFromMultiplayerModes').classList.remove('hidden');
+        }
+
+        function showSinglePlayerStoryMap() {
+            hideAllScreens();
+            singlePlayerStoryMapContainer.classList.remove('hidden');
+            
+            // Set active canvas and context for single player
+            activeGameCanvas = singlePlayerGameCanvas;
+            activeCtx = singlePlayerGameCanvas.getContext('2d');
+            activeGameMode = 'singlePlayer';
+
+            // Initialize local player data for single player
+            // This is crucial: Ensure currentUserId is not null before using it as a key
+            if (currentUserId) {
+                activePlayersData = {
+                    [currentUserId]: {
+                        x: 10, // Start at the beginning of the first map (10% of total width)
+                        y: 75, // Aterrizar al protagonista en el 75% de la altura del mapa para que esté en el jardín
+                        color: playerColors[0], // Arbitrary color for local player, not sent to Firestore
+                        username: currentUserDisplayName
+                    }
+                };
+            } else {
+                // Fallback for when currentUserId is still null (e.g., Firebase not yet initialized)
+                // This scenario should be rare if onAuthStateChanged works as expected, but adds robustness.
+                const tempId = 'temp_player_' + Math.random().toString(36).substr(2, 9);
+                activePlayersData = {
+                    [tempId]: {
+                        x: 10,
+                        y: 75,
+                        color: playerColors[0],
+                        username: 'JugadorTemporal'
+                    }
+                };
+                console.warn("currentUserId era nulo al iniciar singlePlayerStoryMap. Usando un ID temporal.");
+                currentUserId = tempId; // Assign tempId for the session
+            }
+
+            resizeCanvas(); // Adjust canvas to full screen
+            // Only start drawing if map images and player sprite are loaded
+            if (allMapImagesLoaded && idleSpriteLoaded && walkSpriteFrame1Loaded && walkSpriteFrame2Loaded) { // Check all sprites loaded
+                requestAnimationFrame(drawGame); // Start drawing game
+                gameLoopInterval = setInterval(gameLoop, 1000 / 30); // Start game loop
+                console.log("Game loop started for single player.");
+            } else {
+                console.warn("Assets not fully loaded for single player map. Waiting...");
+            }
+            
+            // Show the pause menu button for game modes
+            pauseMenuButton.classList.remove('hidden-during-game');
+            pauseMenuButton.style.display = 'flex'; // Ensure it's displayed
+            
+            // Show mobile controls if on mobile device
+            if (isMobile()) {
+                document.getElementById('mobileControls').classList.remove('hidden');
+            }
+
+            // Add 'game-active' class to the container to hide other UI elements
+            singlePlayerStoryMapContainer.classList.add('game-active');
+        }
+
+        function showAchievements() {
+            hideAllScreens();
+            achievementsContainer.classList.remove('hidden');
+            renderAchievements();
+        }
+
+        function renderAchievements() {
+            achievementsGrid.innerHTML = '';
+            achievementsData.forEach(achievement => {
+                const card = document.createElement('div');
+                card.classList.add('achievement-card');
+                card.dataset.id = achievement.id;
+
+                if (achievement.completed) {
+                    card.classList.add('completed');
+                }
+
+                card.innerHTML = `
+                    <img src="${achievement.icon}" onerror="this.onerror=null;this.src='https://placehold.co/80x80/3f3f3f/FFFFFF?text=?'" alt="Icono de ${achievement.name}" class="achievement-icon ${achievement.type === 'mythical' ? 'mythical' : ''}">
+                    <span class="achievement-name">${achievement.name.toUpperCase()}</span>
+                    <span class="achievement-description">${achievement.description}</span>
+                    <span class="achievement-status ${achievement.completed ? 'completed' : ''}">
+                        ${achievement.completed ? 'COMPLETADO' : 'PENDIENTE'}
+                    </span>
+                `;
+
+                card.addEventListener('click', () => {
+                    achievement.completed = !achievement.completed;
+                    renderAchievements();
+                });
+
+                achievementsGrid.appendChild(card);
+            });
+        }
+
+        function togglePauseMenu() {
+            if (pauseMenuOverlay.classList.contains('hidden')) {
+                pauseMenuOverlay.classList.remove('hidden');
+                clearInterval(gameLoopInterval); // Pause game loop
+                console.log("Game loop paused.");
+                // Unbind movement keys to prevent input during pause
+                document.removeEventListener('keydown', handleKeyDown);
+                document.removeEventListener('keyup', handleKeyUp);
+                document.getElementById('mobileControls').classList.add('hidden'); // Hide mobile controls during pause
+            } else {
+                pauseMenuOverlay.classList.add('hidden');
+                if (activeGameMode === 'singlePlayer' || activeGameMode === 'multiplayer') {
+                    gameLoopInterval = setInterval(gameLoop, 1000 / 30); // Resume game loop
+                    console.log("Game loop resumed.");
+                    // Rebind movement keys
+                    document.addEventListener('keydown', handleKeyDown);
+                    document.addEventListener('keyup', handleKeyUp);
+                    if (isMobile()) {
+                        document.getElementById('mobileControls').classList.remove('hidden'); // Show mobile controls
+                    }
+                }
+            }
+        }
+        
+        // Helper functions for key event listeners
+        function handleKeyDown(e) {
+            keysPressed[e.key.toLowerCase()] = true;
+        }
+
+        function handleKeyUp(e) {
+            keysPressed[e.key.toLowerCase()] = false;
+        }
+
+        // Custom Confirmation Modal Logic
+        let customConfirmResolve;
+
+        function showCustomConfirm(message) {
+            return new Promise(resolve => {
+                customConfirmResolve = resolve;
+                document.getElementById('customConfirmMessage').textContent = message;
+                document.getElementById('customConfirmModal').classList.remove('hidden');
+            });
+        }
+
+        document.getElementById('customConfirmYes').addEventListener('click', () => {
+            document.getElementById('customConfirmModal').classList.add('hidden');
+            if (customConfirmResolve) {
+                customConfirmResolve(true);
+            }
+        });
+
+        document.getElementById('customConfirmNo').addEventListener('click', () => {
+            document.getElementById('customConfirmModal').classList.add('hidden');
+            if (customConfirmResolve) {
+                customConfirmResolve(false);
+            }
+        });
+
+
+        // Firebase Auth State Listener
+        onAuthStateChanged(auth, async (user) => {
+            if (user) {
+                currentUserId = user.uid;
+                currentUserDisplayName = user.displayName || user.email?.split('@')[0] || 'JugadorAnónimo';
+                console.log("Usuario autenticado:", user.email || "Anónimo", user.uid);
+
+                document.getElementById('usernameButton').textContent = currentUserDisplayName.toUpperCase();
+                document.getElementById('usernameButton').dataset.loggedIn = 'true';
+                authMessage.textContent = `Bienvenido, ${currentUserDisplayName}.`;
+                showMainMenu();
+            } else {
+                currentUserId = null; // Ensure it's null if no user is signed in
+                currentUserDisplayName = 'JugadorAnónimo';
+                console.log("No hay usuario autenticado.");
+                document.getElementById('usernameButton').textContent = 'USUARIO';
+                document.getElementById('usernameButton').dataset.loggedIn = 'false';
+                authMessage.textContent = '';
+
+                // Attempt to sign in with custom token if provided (by Canvas environment)
+                if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
+                    try {
+                        await signInWithCustomToken(auth, __initial_auth_token);
+                        console.log("Sesión iniciada con token personalizado.");
+                    } catch (error) {
+                        console.error("Error al iniciar sesión con token personalizado:", error);
+                        // If custom token fails, try anonymous
+                        try {
+                            await signInAnonymously(auth);
+                            console.log("Sesión iniciada anónimamente.");
+                        } catch (anonError) {
+                            console.error("Error al iniciar sesión anónimamente:", anonError);
+                        }
+                    }
+                } else {
+                    // If no custom token is provided (likely running locally), sign in anonymously
+                    try {
+                        await signInAnonymously(auth);
+                        console.log("Sesión iniciada anónimamente (sin token inicial o en entorno local).");
+                    } catch (anonError) {
+                        console.error("Error al iniciar sesión anónimamente:", anonError);
+                    }
+                }
+            }
+        });
+
+        // Game Drawing Function
+        let cameraX = 0;
+        let cameraY = 0;
+
+        function drawGame(currentTime) {
+            // Check if all essential assets and contexts are ready
+            if (!allMapImagesLoaded || !idleSpriteLoaded || !walkSpriteFrame1Loaded || !walkSpriteFrame2Loaded || !activeGameCanvas || !activeCtx || !activePlayersData[currentUserId] || !activePlayersData.hasOwnProperty(currentUserId)) {
+                requestAnimationFrame(drawGame); // Continue looping until ready
+                return;
+            }
+
+            activeCtx.clearRect(0, 0, activeGameCanvas.width, activeGameCanvas.height);
+
+            const currentPlayer = activePlayersData[currentUserId];
+            // Player position in pixels on the total rendered virtual map
+            const playerRenderedX = (currentPlayer.x / 100) * totalRenderedMapWidth;
+            const playerRenderedY = (currentPlayer.y / 100) * renderedMapSegmentHeight; // Assuming player Y is relative to segment height
+
+            // Calculate camera position (top-left corner of the view)
+            // Center the player in the canvas view, then clamp to map boundaries
+            cameraX = playerRenderedX - activeGameCanvas.width / 2;
+            cameraY = playerRenderedY - activeGameCanvas.height / 2;
+
+            // Clamp camera to the edges of the total rendered map
+            cameraX = Math.max(0, Math.min(cameraX, totalRenderedMapWidth - activeGameCanvas.width));
+            cameraY = Math.max(0, Math.min(cameraY, renderedMapSegmentHeight - activeGameCanvas.height)); // Y only clamps within a single segment height
+
+            // Draw map segments
+            for (let i = 0; i < MAP_IMAGE_URLS.length; i++) {
+                const segmentImage = mapImages[i];
+                if (!segmentImage) continue;
+
+                // Position of the segment in the total rendered virtual map
+                const segmentRenderedXInVirtualMap = i * renderedMapSegmentWidth;
+                const segmentRenderedYInVirtualMap = 0; // Assuming maps are laid out horizontally
+
+                // Calculate the segment's position on the canvas relative to the camera
+                const drawX = segmentRenderedXInVirtualMap - cameraX;
+                const drawY = segmentRenderedYInVirtualMap - cameraY;
+
+                // Only draw if the segment is visible within the canvas area
+                if (drawX < activeGameCanvas.width && drawX + renderedMapSegmentWidth > 0 &&
+                    drawY < activeGameCanvas.height && drawY + renderedMapSegmentHeight > 0) {
+                    activeCtx.drawImage(segmentImage, drawX, drawY, renderedMapSegmentWidth, renderedMapSegmentHeight);
+                }
+            }
+
+            // Draw players (adjusted for camera view)
+            for (const playerId in activePlayersData) {
+                const player = activePlayersData[playerId];
+                if (player && typeof player.x === 'number' && typeof player.y === 'number') {
+                    // Player position in pixels on the total rendered virtual map
+                    const playerRenderedX = (player.x / 100) * totalRenderedMapWidth;
+                    const playerRenderedY = (player.y / 100) * renderedMapSegmentHeight;
+
+                    // Calculate player's position on the canvas relative to the camera
+                    const drawX = playerRenderedX - PLAYER_SIZE / 2 - cameraX; // Centra X del jugador
+                    const drawY = playerRenderedY - PLAYER_SIZE - cameraY; // Dibuja desde la parte superior para que la base del jugador esté en playerRenderedY
+
+                    // Choose sprite based on playerState
+                    let currentSprite = null;
+                    if (playerState === 'walking') {
+                        if (currentTime - lastFrameTime > FRAME_UPDATE_INTERVAL) {
+                            currentWalkFrame = (currentWalkFrame + 1) % 2; // Alternate between 0 and 1
+                            lastFrameTime = currentTime;
+                        }
+                        currentSprite = currentWalkFrame === 0 ? walkSpriteImageFrame1 : walkSpriteImageFrame2;
+                    } else { // 'idle'
+                        currentSprite = idleSpriteImage;
+                        currentWalkFrame = 0; // Reset walk frame when idle
+                    }
+
+                    // Only draw if the player is within visible canvas limits
+                    if (drawX >= -PLAYER_SIZE && drawX <= activeGameCanvas.width + PLAYER_SIZE &&
+                        drawY >= -PLAYER_SIZE && drawY <= activeGameCanvas.height + PLAYER_SIZE) {
+
+                        // Draw player sprite
+                        if (currentSprite && currentSprite.complete) { // Ensure sprite is loaded
+                            activeCtx.drawImage(currentSprite, drawX, drawY, PLAYER_SIZE, PLAYER_SIZE);
+                        } else {
+                            // Fallback to circle if sprite not loaded
+                            activeCtx.beginPath();
+                            activeCtx.arc(drawX + PLAYER_SIZE / 2, drawY + PLAYER_SIZE / 2, PLAYER_SIZE / 2, 0, Math.PI * 2);
+                            activeCtx.fillStyle = player.color || '#FFFFFF';
+                            activeCtx.fill();
+                            activeCtx.lineWidth = 2;
+                            activeCtx.strokeStyle = '#000000';
+                            activeCtx.stroke();
+                        }
+                        
+                        // Draw player name
+                        activeCtx.fillStyle = '#FFFFFF';
+                        activeCtx.font = '12px "Press Start 2P"'; // Ajustado el tamaño de la fuente para el nombre
+                        activeCtx.textAlign = 'center';
+                        activeCtx.fillText(player.username, drawX + PLAYER_SIZE / 2, drawY - 5); // Nombre sobre el jugador
+                    }
+                }
+            }
+
+            requestAnimationFrame(drawGame);
+        }
+
+        // Function to update player position in Firestore (for multiplayer)
+        async function updatePlayerPositionInFirestore(newX, newY) {
+            if (activeGameMode !== 'multiplayer' || !currentRoomId || !currentUserId || !db) return;
+
+            const clampedX = Math.max(0, Math.min(100, newX));
+            const clampedY = Math.max(0, Math.min(100, newY));
+            // console.log(`[Multiplayer] Actualizando posición en Firestore: X=${clampedX.toFixed(2)}, Y=${clampedY.toFixed(2)}`); // Log de depuración
+
+            try {
+                const mapDocRef = doc(db, `artifacts/${appId}/public/data/gameMaps`, currentRoomId);
+                const updateData = {};
+                updateData[`players.${currentUserId}.x`] = clampedX;
+                updateData[`players.${currentUserId}.y`] = clampedY;
+                await updateDoc(mapDocRef, updateData);
+            } catch (error) {
+                console.error("Error al actualizar posición del jugador:", error);
+            }
+        }
+
+        // Game Loop for local player movement
+        function gameLoop() {
+            if (!currentUserId || !activePlayersData[currentUserId] || !activeGameCanvas || totalRenderedMapWidth === 0 || renderedMapSegmentHeight === 0) {
+                // This warning should rarely appear if Firebase auth works and assets are loaded.
+                console.warn("Game loop: Missing prerequisites for player movement/drawing.");
+                return;
+            }
+
+            let playerX = activePlayersData[currentUserId].x;
+            // let playerY = activePlayersData[currentUserId].y; // No longer needed for vertical movement
+            let movedHorizontal = false;
+
+            // Movement amounts in percentages relative to the total rendered map dimensions
+            const moveAmountX = (PLAYER_SPEED / totalRenderedMapWidth) * 100;
+            // const moveAmountY = (PLAYER_SPEED / renderedMapSegmentHeight) * 100; // No longer needed for vertical movement
+
+            // Horizontal Movement Only
+            if (keysPressed['arrowleft'] || keysPressed['a']) {
+                playerX -= moveAmountX;
+                movedHorizontal = true;
+            }
+            if (keysPressed['arrowright'] || keysPressed['d']) {
+                playerX += moveAmountX;
+                movedHorizontal = true;
+            }
+
+            // Update playerState based on horizontal movement
+            // If any horizontal movement key is pressed, the player is 'walking'
+            if (movedHorizontal) {
+                playerState = 'walking';
+            } else {
+                // If no movement keys are pressed, the player is 'idle'
+                playerState = 'idle';
+            }
+
+            if (movedHorizontal) {
+                // Ensure player stays within map bounds (0-100% of total map)
+                playerX = Math.max(0, Math.min(100, playerX));
+                // playerY = Math.max(0, Math.min(100, playerY)); // No clamping needed for Y as it's fixed initially
+
+                if (activeGameMode === 'multiplayer') {
+                    updatePlayerPositionInFirestore(playerX, activePlayersData[currentUserId].y); // Pass original Y as it's not changed
+                    // console.log(`[Multiplayer Local] Nueva posición del jugador (enviar a Firestore): X=${playerX.toFixed(2)}, Y=${activePlayersData[currentUserId].y.toFixed(2)}`);
+                } else if (activeGameMode === 'singlePlayer') {
+                    // Update local player data for single player
+                    activePlayersData[currentUserId].x = playerX;
+                    // activePlayersData[currentUserId].y remains fixed
+                    console.log(`[Singleplayer Local] Nueva posición del jugador (local): X=${playerX.toFixed(2)}, Y=${activePlayersData[currentUserId].y.toFixed(2)}`);
+                }
+            }
+        }
+
+        // Multiplayer Functions
+        const generateRoomCode = () => {
+            let result = '';
+            const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+            const charactersLength = characters.length;
+            for (let i = 0; i < 6; i++) {
+                result += characters.charAt(Math.floor(Math.random() * charactersLength));
+            }
+            return result;
+        };
+
+        const createRoom = async (isStoryMode = false) => {
+            if (!db || !currentUserId) {
+                multiplayerMessage.textContent = "Error: Usuario no autenticado.";
+                return;
+            }
+            multiplayerMessage.textContent = 'Creando sala...';
+            try {
+                const newRoomCode = generateRoomCode();
+                const newRoomRef = doc(collection(db, `artifacts/${appId}/public/data/gameRooms`));
+                const roomId = newRoomRef.id;
+
+                const newRoomData = {
+                    roomCode: newRoomCode,
+                    createdAt: new Date().toISOString(),
+                    hostId: currentUserId,
+                    players: [{ id: currentUserId, username: currentUserDisplayName }],
+                    aguilasRescatadas: 0,
+                    status: 'esperando',
+                    isStoryMode: isStoryMode
+                };
+
+                await setDoc(newRoomRef, newRoomData);
+                currentRoomId = roomId;
+                multiplayerMessage.textContent = `Sala creada con código: ${newRoomCode}`;
+
+                const initialPlayerPosition = {
+                    x: 10,
+                    y: 75, // Aterrizar al protagonista en el 75% de la altura del mapa para que esté en el jardín
+                    color: playerColors[Math.floor(Math.random() * playerColors.length)],
+                    username: currentUserDisplayName
+                };
+
+                await setDoc(doc(db, `artifacts/${appId}/public/data/gameMaps`, roomId), {
+                    players: {
+                        [currentUserId]: initialPlayerPosition
+                    },
+                    mapState: {}
+                });
+
+                enterRoomView(newRoomData);
+            }
+            catch (err) {
+                let retryCount = 0;
+                const MAX_RETRIES = 5;
+                const RETRY_DELAY_MS = 1000;
+
+                async function retryCreateRoom() {
+                    if (retryCount < MAX_RETRIES) {
+                        retryCount++;
+                        console.log(`Reintentando crear sala... Intento ${retryCount}`);
+                        await new Promise(resolve => setTimeout(resolve, RETRY_DELAY_MS * Math.pow(2, retryCount - 1)));
+                        try {
+                            const newRoomCode = generateRoomCode();
+                            const newRoomRef = doc(collection(db, `artifacts/${appId}/public/data/gameRooms`));
+                            const roomId = newRoomRef.id;
+
+                            const newRoomData = {
+                                roomCode: newRoomCode,
+                                createdAt: new Date().toISOString(),
+                                hostId: currentUserId,
+                                players: [{ id: currentUserId, username: currentUserDisplayName }],
+                                aguilasRescatadas: 0,
+                                status: 'esperando',
+                                isStoryMode: isStoryMode
+                            };
+
+                            await setDoc(newRoomRef, newRoomData);
+                            currentRoomId = roomId;
+                            multiplayerMessage.textContent = `Sala creada con código: ${newRoomCode}`;
+
+                            const initialPlayerPosition = {
+                                x: 10,
+                                y: 75, // Aterrizar al protagonista en el 75% de la altura del mapa para que esté en el jardín
+                                color: playerColors[Math.floor(Math.random() * playerColors.length)],
+                                username: currentUserDisplayName
+                            };
+
+                            await setDoc(doc(db, `artifacts/${appId}/public/data/gameMaps`, roomId), {
+                                players: {
+                                    [currentUserId]: initialPlayerPosition
+                                },
+                                mapState: {}
+                            });
+
+                            enterRoomView(newRoomData);
+                        } catch (innerErr) {
+                            console.error("Error al reintentar crear sala:", innerErr);
+                            if (retryCount === MAX_RETRIES) {
+                                multiplayerMessage.textContent = `Error creando sala después de ${MAX_RETRIES} intentos: ${innerErr.message}`;
+                            } else {
+                                await retryCreateRoom();
+                            }
+                        }
+                    } else {
+                        multiplayerMessage.textContent = `Error creando sala: ${err.message}`;
+                    }
+                }
+                await retryCreateRoom();
+            }
+        };
+
+        const joinRoomByCode = async (codeOverride = null) => {
+            if (!db || !currentUserId) {
+                multiplayerMessage.textContent = "Error: Usuario no autenticado.";
+                return;
+            }
+            const code = codeOverride || roomCodeInput.value.toUpperCase();
+            if (!code || code.length !== 6) {
+                multiplayerMessage.textContent = "Por favor, introduce un código de sala válido de 6 dígitos.";
+                return;
+            }
+            multiplayerMessage.textContent = 'Uniéndose a sala...';
+            try {
+                const roomsCollectionRef = collection(db, `artifacts/${appId}/public/data/gameRooms`);
+                const q = query(roomsCollectionRef, where('roomCode', '==', code));
+                const querySnapshot = await getDocs(q);
+
+                if (!querySnapshot.empty) {
+                    const roomDoc = querySnapshot.docs[0];
+                    const roomId = roomDoc.id;
+                    const roomData = roomDoc.data();
+                    let players = roomData.players || [];
+
+                    const isPlayerAlreadyInRoom = players.some(player => player.id === currentUserId);
+
+                    if (!isPlayerAlreadyInRoom) {
+                        // Get the user's display name or a fallback
+                        const username = auth.currentUser?.displayName || auth.currentUser?.email?.split('@')[0] || 'JugadorAnónimo';
+                        // Add the current user to the players array if not already present
+                        const updatedPlayers = [...players, { id: currentUserId, username: username }];
+                        await updateDoc(doc(db, `artifacts/${appId}/public/data/gameRooms`, roomId), { players: updatedPlayers }); // Update the players array
+
+                        const mapDocRef = doc(db, `artifacts/${appId}/public/data/gameMaps`, roomId);
+                        const playerColor = playerColors[Math.floor(Math.random() * playerColors.length)];
+                        await setDoc(mapDocRef, {
+                            players: {
+                                ...((await getDoc(mapDocRef)).data()?.players || {}),
+                                [currentUserId]: {
+                                    x: Math.random() * 80 + 10,
+                                    y: 75, // Aterrizar al protagonista en el 75% de la altura del mapa
+                                    color: playerColor,
+                                    username: currentUserDisplayName
+                                }
+                            }
+                        }, { merge: true });
+                    }
+                    currentRoomId = roomId;
+                    multiplayerMessage.textContent = `Unido a sala: ${code}`;
+                    enterRoomView(roomData);
+                } else {
+                    multiplayerMessage.textContent = "La sala no existe o el código es incorrecto.";
+                }
+            }
+            catch (err) {
+                let retryCount = 0;
+                const MAX_RETRIES = 5;
+                const RETRY_DELAY_MS = 1000;
+
+                async function retryJoinRoom() {
+                    if (retryCount < MAX_RETRIES) {
+                        retryCount++;
+                        console.log(`Reintentando unirse a sala... Intento ${retryCount}`);
+                        await new Promise(resolve => setTimeout(resolve, RETRY_DELAY_MS * Math.pow(2, retryCount - 1)));
+                        try {
+                            const roomsCollectionRef = collection(db, `artifacts/${appId}/public/data/gameRooms`);
+                            const q = query(roomsCollectionRef, where('roomCode', '==', code));
+                            const querySnapshot = await getDocs(q);
+
+                            if (!querySnapshot.empty) {
+                                const roomDoc = querySnapshot.docs[0];
+                                const roomId = roomDoc.id;
+                                const roomData = roomDoc.data();
+                                let players = roomData.players || [];
+
+                                const isPlayerAlreadyInRoom = players.some(player => player.id === currentUserId);
+
+                                if (!isPlayerAlreadyInRoom) {
+                                    // Get the user's display name or a fallback
+                                    const username = auth.currentUser?.displayName || auth.currentUser?.email?.split('@')[0] || 'JugadorAnónimo';
+                                    // Add the current user to the players array if not already present
+                                    const updatedPlayers = [...players, { id: currentUserId, username: username }];
+                                    await updateDoc(doc(db, `artifacts/${appId}/public/data/gameRooms`, roomId), { players: updatedPlayers }); // Update the players array
+
+                                    const mapDocRef = doc(db, `artifacts/${appId}/public/data/gameMaps`, roomId);
+                                    const playerColor = playerColors[Math.floor(Math.random() * playerColors.length)];
+                                    await setDoc(mapDocRef, {
+                                        players: {
+                                            ...((await getDoc(mapDocRef)).data()?.players || {}),
+                                            [currentUserId]: {
+                                                x: Math.random() * 80 + 10,
+                                                y: 75, // Aterrizar al protagonista en el 75% de la altura del mapa
+                                                color: playerColor,
+                                                username: currentUserDisplayName
+                                            }
+                                        }
+                                    }, { merge: true });
+                                }
+                                currentRoomId = roomId;
+                                multiplayerMessage.textContent = `Unido a sala: ${code}`;
+                                enterRoomView(roomData);
+                            } else {
+                                multiplayerMessage.textContent = "La sala no existe o el código es incorrecto.";
+                            }
+                        } catch (innerErr) {
+                            console.error("Error al reintentar unirse a sala:", innerErr);
+                            if (retryCount === MAX_RETRIES) {
+                                multiplayerMessage.textContent = `Error al unirse a sala después de ${MAX_RETRIES} intentos: ${innerErr.message}`;
+                            } else {
+                                await retryJoinRoom();
+                            }
+                        }
+                    } else {
+                        multiplayerMessage.textContent = `Error al unirse a sala: ${err.message}`;
+                    }
+                }
+                await retryJoinRoom();
+            }
+        };
+
+        const leaveRoom = async () => {
+            if (!db || !currentUserId || !currentRoomId) return;
+            multiplayerMessage.textContent = 'Saliendo de la sala...';
+            try {
+                const roomRef = doc(db, `artifacts/${appId}/public/data/gameRooms`, currentRoomId);
+                const roomSnap = await getDoc(roomRef);
+
+                const mapDocRef = doc(db, `artifacts/${appId}/public/data/gameMaps`, currentRoomId);
+                const mapSnap = await getDoc(mapDocRef);
+                if (mapSnap.exists()) {
+                    const mapPlayers = mapSnap.data().players || {};
+                    const { [currentUserId]: removedPlayer, ...remainingPlayers } = mapPlayers;
+                    if (Object.keys(remainingPlayers).length === 0) {
+                        await deleteDoc(mapDocRef);
+                        console.log("Documento del mapa eliminado porque no quedan jugadores.");
+                    } else {
+                        await updateDoc(mapDocRef, { players: remainingPlayers });
+                        console.log("Jugador eliminado del documento del mapa.");
+                    }
+                }
+
+                if (roomSnap.exists()) {
+                    let players = roomSnap.data().players || [];
+                    const updatedPlayers = players.filter(player => player.id !== currentUserId);
+
+                    if (updatedPlayers.length === 0) {
+                        await deleteDoc(roomRef);
+                        console.log("Sala eliminada porque está vacía.");
+                    } else {
+                        await updateDoc(roomRef, { players: updatedPlayers });
+                        console.log("Jugador ha abandonado la sala.");
+                    }
+                }
+                currentRoomId = null;
+                roomCodeInput.value = '';
+                multiplayerMessage.textContent = "Has salido de la sala.";
+                if (unsubscribeRoomListener) {
+                    unsubscribeRoomListener();
+                    unsubscribeRoomListener = null;
+                }
+                if (unsubscribeMapListener) {
+                    unsubscribeMapListener();
+                    unsubscribeMapListener = null;
+                }
+                activePlayersData = {};
+                showMultiplayerLobby();
+            }
+            catch (err) {
+                let retryCount = 0;
+                const MAX_RETRIES = 5;
+                const RETRY_DELAY_MS = 1000;
+
+                async function retryLeaveRoom() {
+                    if (retryCount < MAX_RETRIES) {
+                        retryCount++;
+                        console.log(`Reintentando salir de la sala... Intento ${retryCount}`);
+                        await new Promise(resolve => setTimeout(resolve, RETRY_DELAY_MS * Math.pow(2, retryCount - 1)));
+                        try {
+                            const roomRef = doc(db, `artifacts/${appId}/public/data/gameRooms`, currentRoomId);
+                            const roomSnap = await getDoc(roomRef);
+
+                            const mapDocRef = doc(db, `artifacts/${appId}/public/data/gameMaps`, currentRoomId);
+                            const mapSnap = await getDoc(mapDocRef);
+                            if (mapSnap.exists()) {
+                                const mapPlayers = mapSnap.data().players || {};
+                                const { [currentUserId]: removedPlayer, ...remainingPlayers } = mapPlayers;
+                                if (Object.keys(remainingPlayers).length === 0) {
+                                    await deleteDoc(mapDocRef);
+                                } else {
+                                    await updateDoc(mapDocRef, { players: remainingPlayers });
+                                }
+                            }
+
+                            if (roomSnap.exists()) {
+                                let players = roomSnap.data().players || [];
+                                const updatedPlayers = players.filter(player => player.id !== currentUserId);
+
+                                if (updatedPlayers.length === 0) {
+                                    await deleteDoc(roomRef);
+                                } else {
+                                    await updateDoc(roomRef, { players: updatedPlayers });
+                                }
+                            }
+                            currentRoomId = null;
+                            roomCodeInput.value = '';
+                            multiplayerMessage.textContent = "Has salido de la sala.";
+                            if (unsubscribeRoomListener) {
+                                unsubscribeRoomListener();
+                                unsubscribeRoomListener = null;
+                            }
+                            if (unsubscribeMapListener) {
+                                unsubscribeMapListener();
+                                unsubscribeMapListener = null;
+                            }
+                            activePlayersData = {};
+                            showMultiplayerLobby();
+                        } catch (innerErr) {
+                            console.error("Error al reintentar salir de la sala:", innerErr);
+                            if (retryCount === MAX_RETRIES) {
+                                multiplayerMessage.textContent = `Error al salir de la sala después de ${MAX_RETRIES} intentos: ${innerErr.message}`;
+                            } else {
+                                await retryLeaveRoom();
+                            }
+                        }
+                    } else {
+                        multiplayerMessage.textContent = `Error al salir de la sala: ${err.message}`;
+                    }
+                }
+                await retryLeaveRoom();
+            }
+        };
+
+        const rescueEagle = async () => {
+            if (!db || !currentRoomId) {
+                multiplayerMessage.textContent = "No estás en una sala activa.";
+                return;
+            }
+            multiplayerMessage.textContent = 'Rescatando águila...';
+            try {
+                const roomRef = doc(db, `artifacts/${appId}/public/data/gameRooms`, currentRoomId);
+                const roomSnap = await getDoc(roomRef);
+                if (roomSnap.exists()) {
+                    const currentAguilas = roomSnap.data().aguilasRescatadas || 0;
+                    await updateDoc(roomRef, { aguilasRescatadas: currentAguilas + 1 });
+                    multiplayerMessage.textContent = "¡Águila rescatada!";
+                }
+            }
+            catch (err) {
+                let retryCount = 0;
+                const MAX_RETRIES = 5;
+                const RETRY_DELAY_MS = 1000;
+
+                async function retryRescueEagle() {
+                    if (retryCount < MAX_RETRIES) {
+                        retryCount++;
+                        console.log(`Reintentando rescatar águila... Intento ${retryCount}`);
+                        await new Promise(resolve => setTimeout(resolve, RETRY_DELAY_MS * Math.pow(2, retryCount - 1)));
+                        try {
+                            const roomRef = doc(db, `artifacts/${appId}/public/data/gameRooms`, currentRoomId);
+                            const roomSnap = await getDoc(roomRef);
+                            if (roomSnap.exists()) {
+                                const currentAguilas = roomSnap.data().aguilasRescatadas || 0;
+                                await updateDoc(roomRef, { aguilasRescatadas: currentAguilas + 1 });
+                                multiplayerMessage.textContent = "¡Águila rescatada!";
+                            }
+                        } catch (innerErr) {
+                            console.error("Error al reintentar rescatar águila:", innerErr);
+                            if (retryCount === MAX_RETRIES) {
+                                multiplayerMessage.textContent = `Error al rescatar águila después de ${MAX_RETRIES} intentos: ${innerErr.message}`;
+                            } else {
+                                await retryRescueEagle();
+                            }
+                        }
+                    } else {
+                        multiplayerMessage.textContent = `Error al rescatar águila: ${err.message}`;
+                    }
+                }
+                await retryRescueEagle();
+            }
+        };
+
+
+        // Function to enter room view and subscribe to updates
+        function enterRoomView(roomData) {
+            hideAllScreens(); // Hide all other screens for an immersive game experience
+            multiplayerContainer.classList.remove('hidden'); // Show the multiplayer container
+            multiplayerLobby.classList.add('hidden'); // Hide lobby
+            multiplayerRoomView.classList.remove('hidden'); // Show room view
+
+            // Set active canvas and context for multiplayer
+            activeGameCanvas = multiplayerGameCanvas;
+            activeCtx = multiplayerGameCanvas.getContext('2d');
+            activeGameMode = 'multiplayer';
+
+            // Hide UI elements that are not part of the direct game experience
+            multiplayerContainer.querySelector('.multiplayer-header').style.display = 'none';
+            multiplayerUserDisplay.style.display = 'none';
+            multiplayerMessage.style.display = 'none';
+            multiplayerLobby.style.display = 'none';
+            multiplayerRoomView.querySelector('.multiplayer-room-info').style.display = 'none';
+            multiplayerRoomView.querySelector('div.mb-6.mt-4.text-center').style.display = 'none';
+            multiplayerRoomView.querySelector('div.mb-6.w-full').style.display = 'none';
+            document.getElementById('leaveRoomButton').style.display = 'none';
+            // The back button will be part of the pause menu now
+            document.getElementById('backToMainMenuFromMultiplayer').classList.add('hidden');
+
+
+            // Show the pause menu button for game modes
+            pauseMenuButton.classList.remove('hidden-during-game');
+            pauseMenuButton.style.display = 'flex'; // Ensure it's displayed
+
+            // Show mobile controls if on mobile device
+            if (isMobile()) {
+                document.getElementById('mobileControls').classList.remove('hidden');
+            }
+
+            // Subscribe to real-time updates for this room (players, eagles)
+            const roomDocRef = doc(db, `artifacts/${appId}/public/data/gameRooms`, currentRoomId);
+            unsubscribeRoomListener = onSnapshot(roomDocRef, (docSnap) => {
+                if (docSnap.exists()) {
+                    const latestRoomData = docSnap.data();
+                    aguilasRescatadasDisplay.textContent = latestRoomData.aguilasRescatadas;
+                    updatePlayersList(latestRoomData.players, latestRoomData.hostId);
+                } else {
+                    currentRoomId = null;
+                    multiplayerMessage.textContent = "La sala ha sido eliminada por el anfitrión o ha expirado.";
+                    showMultiplayerLobby();
+                }
+            }, (error) => {
+                console.error("Error en el listener de la sala:", error);
+                multiplayerMessage.textContent = `Error en la sala: ${error.message}`;
+            });
+
+            // Subscribe to map updates (player positions)
+            const mapDocRef = doc(db, `artifacts/${appId}/public/data/gameMaps`, currentRoomId);
+            unsubscribeMapListener = onSnapshot(mapDocRef, (docSnap) => {
+                if (docSnap.exists()) {
+                    const mapData = docSnap.data();
+                    activePlayersData = mapData.players || {};
+                } else {
+                    console.warn("Documento del mapa no encontrado, saliendo de la sala.");
+                    leaveRoom();
+                }
+            }, (error) => {
+                console.error("Error en el listener del mapa:", error);
+            });
+
+            resizeCanvas();
+            // Only start drawing if map images and player sprite are loaded
+            if (allMapImagesLoaded && idleSpriteLoaded && walkSpriteFrame1Loaded && walkSpriteFrame2Loaded) { // Check all sprites loaded
+                requestAnimationFrame(drawGame);
+                gameLoopInterval = setInterval(gameLoop, 1000 / 30); // Start game loop
+                console.log("Game loop started for multiplayer.");
+            } else {
+                console.warn("Assets not fully loaded for multiplayer map. Waiting...");
+            }
+
+            // Add 'game-active' class to the container to hide other UI elements
+            multiplayerContainer.classList.add('game-active');
+        }
+
+        // Function to update the player list in UI
+        function updatePlayersList(players, hostId) {
+            playersList.innerHTML = '';
+            if (players && players.length > 0) {
+                players.forEach(player => {
+                    const li = document.createElement('li');
+                    li.classList.add('player-item');
+                    const dot = document.createElement('span');
+                    dot.classList.add('player-status-dot');
+                    dot.style.backgroundColor = (activePlayersData[player.id] && activePlayersData[player.id].color) || '#FFFFFF';
+                    li.appendChild(dot);
+                    
+                    let hostText = '';
+                    if (player.id === hostId) {
+                        hostText = '(Anfitrión)';
+                    }
+                    li.innerHTML += `${player.username} ${player.id === currentUserId ? '(Tú)' : ''} ${hostText}`;
+                    playersList.appendChild(li);
+                });
+            } else {
+                const li = document.createElement('li');
+                li.classList.add('player-item');
+                li.textContent = 'Esperando jugadores...';
+                playersList.appendChild(li);
+            }
+        }
+
+        // --- Fullscreen Logic ---
+        document.getElementById('fullscreenButton').addEventListener('click', () => {
+            if (document.fullscreenElement) {
+                document.exitFullscreen();
+            } else {
+                document.documentElement.requestFullscreen().catch(err => {
+                    console.error(`Error al intentar activar pantalla completa: ${err.message} (${err.name})`);
+                });
+            }
+        });
+
+        // Event Listeners for menu and game modes
         document.getElementById('playButton').addEventListener('click', function() {
             console.log('¡Botón "JUGAR" clickeado!');
+            showSinglePlayerStoryMap();
         });
 
-        document.getElementById('historiaButton').addEventListener('click', function() {
-            console.log('¡Botón "Historia" clickeado!');
+        document.getElementById('multiplayerButton').addEventListener('click', function() {
+            console.log('¡Botón "Multijugador" clickeado!');
+            showMultiplayerGameModeSelection();
         });
 
-        document.getElementById('batallaButton').addEventListener('click', function() {
+        // Event Listeners for multiplayer mode selection
+        document.getElementById('exploreMapButton').addEventListener('click', function() {
+            console.log('¡Botón "Explorar Mapa (Historia)" clickeado!');
+            const storyRoomCode = "STORY0"; // Fixed code for multiplayer story room
+            multiplayerMessage.textContent = "Iniciando mapa de historia multijugador...";
+            joinRoomByCode(storyRoomCode);
+        });
+
+        document.getElementById('battleModeButton').addEventListener('click', function() {
             console.log('¡Botón "Batalla" clickeado!');
-        });
-
-        document.getElementById('arenaButton').addEventListener('click', function() {
-            console.log('¡Botón "Arena" clickeado!');
+            multiplayerMessage.textContent = "Modo Batalla en construcción.";
         });
 
         document.getElementById('tiendaButton').addEventListener('click', function() {
@@ -874,10 +2229,9 @@
             showMainMenu();
         });
 
-        document.getElementById('usernameButton').addEventListener('click', function() {
+        document.getElementById('usernameButton').addEventListener('click', async function() {
             if (this.dataset.loggedIn === 'true') {
-                // IMPORTANT: In a production environment, replace window.confirm with a custom modal
-                const wantsToSignOut = window.confirm('¿Quieres cerrar sesión?');
+                const wantsToSignOut = await showCustomConfirm('¿Quieres cerrar sesión?');
                 if (wantsToSignOut) {
                     signOut(auth).then(() => {
                         console.log('Sesión cerrada.');
@@ -894,9 +2248,38 @@
             }
         });
 
+        document.getElementById('logrosButton').addEventListener('click', function() {
+            console.log('¡Botón "LOGROS" clickeado!');
+            showAchievements();
+        });
+
+        document.getElementById('upcomingButton').addEventListener('click', function() {
+            console.log('¡Botón "Próximamente..." clickeado!');
+            multiplayerMessage.textContent = "¡Esta característica estará disponible pronto!";
+        });
+
         document.getElementById('showRegisterButton').addEventListener('click', showRegisterScreen);
         document.getElementById('showLoginButton').addEventListener('click', showLoginScreen);
         document.getElementById('backToMenuFromAuthChoices').addEventListener('click', showMainMenu);
+        
+        // Back to main menu buttons from non-game screens (still use direct showMainMenu)
+        document.getElementById('backToMainMenuFromMultiplayerModes').addEventListener('click', showMainMenu);
+        document.getElementById('backToMainMenuFromAchievements').addEventListener('click', showMainMenu);
+
+        // Pause Menu Buttons
+        pauseMenuButton.addEventListener('click', togglePauseMenu);
+        document.getElementById('resumeGameButton').addEventListener('click', togglePauseMenu);
+        document.getElementById('settingsButton').addEventListener('click', () => {
+            // IMPORTANT: Replace alert with custom modal in production for better UX
+            showCustomConfirm('Funcionalidad de Ajustes Próximamente!').then(result => {
+                console.log("Diálogo de ajustes cerrado:", result);
+            });
+        });
+        document.getElementById('backToMainMenuFromPause').addEventListener('click', () => {
+            togglePauseMenu(); // Close pause menu first
+            showMainMenu();
+        });
+
 
         document.getElementById('backToAuthChoicesFromRegister').addEventListener('click', showAuthChoiceScreen);
         document.getElementById('submitRegisterButton').addEventListener('click', async () => {
@@ -915,7 +2298,6 @@
                 const userCredential = await createUserWithEmailAndPassword(auth, email, password);
                 const user = userCredential.user;
 
-                // Guarda el displayName en el perfil de Firebase Auth
                 if (username) {
                     await updateProfile(user, { displayName: username });
                     console.log("Perfil de usuario actualizado con nombre:", username);
@@ -924,13 +2306,11 @@
                 console.log("Usuario registrado con éxito:", user.email, "Nombre de visualización:", user.displayName || 'N/A');
                 authMessage.textContent = `Registro exitoso para ${user.displayName || user.email}. ¡Bienvenido!`;
 
-                // Guarda información adicional del usuario en Firestore
-                // El path de Firestore debe ser /artifacts/{appId}/users/{userId}/{your_collection_name}
                 const userRef = doc(db, `artifacts/${appId}/users/${user.uid}/profile`, 'data');
                 await setDoc(userRef, {
                     email: user.email,
                     displayName: user.displayName || '',
-                    username: username || '', // Guarda el nombre de usuario explícitamente en Firestore
+                    username: username || '',
                     createdAt: new Date()
                 }, { merge: true });
                 console.log("Documento de usuario creado/actualizado en Firestore.");
@@ -974,7 +2354,6 @@
                 const user = result.user;
                 console.log("Usuario logeado con Google con éxito:", user.displayName || user.email);
                 authMessage.textContent = `Inicio de sesión exitoso con Google para ${user.displayName || user.email}. ¡Bienvenido!`;
-                // Guarda o actualiza información del usuario en Firestore (incluido displayName de Google)
                 const userRef = doc(db, `artifacts/${appId}/users/${user.uid}/profile`, 'data');
                 await setDoc(userRef, {
                     email: user.email,
@@ -998,7 +2377,6 @@
                 const user = result.user;
                 console.log("Usuario logeado con Google con éxito:", user.displayName || user.email);
                 authMessage.textContent = `Inicio de sesión exitoso con Google para ${user.displayName || user.email}. ¡Bienvenido!`;
-                // Guarda o actualiza información del usuario en Firestore (incluido displayName de Google)
                 const userRef = doc(db, `artifacts/${appId}/users/${user.uid}/profile`, 'data');
                 await setDoc(userRef, {
                     email: user.email,
@@ -1012,6 +2390,12 @@
                 authMessage.textContent = `Error al iniciar sesión con Google: ${error.message}`;
             }
         });
+
+        // Event Listeners for multiplayer
+        document.getElementById('createRoomButton').addEventListener('click', createRoom);
+        document.getElementById('joinRoomByCodeButton').addEventListener('click', joinRoomByCode);
+        document.getElementById('leaveRoomButton').addEventListener('click', leaveRoom);
+        document.getElementById('rescueEagleButton').addEventListener('click', rescueEagle);
 
         const backgroundMusic = document.getElementById('background-music');
         const musicToggleButton = document.getElementById('musicToggleButton');
@@ -1062,7 +2446,37 @@
 
         document.body.addEventListener('click', resumeAudioOnFirstInteraction);
 
+        window.onload = resizeCanvas; // Initial canvas resize on load
+        
         showMainMenu();
+
+        // Mobile Controls Event Listeners
+        const mobileLeftButton = document.getElementById('mobileLeft');
+        const mobileRightButton = document.getElementById('mobileRight');
+
+        if (mobileLeftButton && mobileRightButton) {
+            mobileLeftButton.addEventListener('touchstart', (e) => {
+                e.preventDefault();
+                keysPressed['a'] = true; // Simulate 'a' key for left movement
+            });
+            mobileLeftButton.addEventListener('touchend', (e) => {
+                e.preventDefault();
+                keysPressed['a'] = false;
+            });
+
+            mobileRightButton.addEventListener('touchstart', (e) => {
+                e.preventDefault();
+                keysPressed['d'] = true; // Simulate 'd' key for right movement
+            });
+            mobileRightButton.addEventListener('touchend', (e) => {
+                e.preventDefault();
+                keysPressed['d'] = false;
+            });
+        }
+
+        // Initially bind key listeners
+        document.addEventListener('keydown', handleKeyDown);
+        document.addEventListener('keyup', handleKeyUp);
     </script>
 
 </body>
